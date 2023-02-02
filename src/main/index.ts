@@ -1,11 +1,15 @@
-import { app, shell, BrowserWindow } from 'electron'
+import { app, shell, BrowserWindow, dialog, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import fs from 'fs'
+import path from 'path'
+
+let mainWindow
 
 function createWindow(): void {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
     show: false,
@@ -67,5 +71,48 @@ app.on('window-all-closed', () => {
   }
 })
 
+let activeFolder
+
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
+const getFileFromUser = async () => {
+  const folder = await dialog.showOpenDialog({
+    properties: ['openDirectory'],
+    filters: [{ name: 'JSON File', extensions: ['json'] }]
+  })
+
+  if (!folder) {
+    return
+  }
+
+  activeFolder = path.resolve(folder.filePaths[0])
+
+  const fileContents = fs.readdirSync(activeFolder)
+
+  if (fileContents.length > 0) {
+    const contents = fileContents.map((item) => {
+      const filePath = path.resolve(folder.filePaths[0], item)
+      const fileBuffer = fs.readFileSync(filePath)
+      const content = Buffer.from(fileBuffer).toString()
+      return JSON.parse(content)
+    })
+    if (contents.length > 0) return contents
+  }
+
+  return folder
+}
+
+const saveFile = (data) => {
+  console.log(data)
+  fs.writeFileSync(`${activeFolder}/helo.json`, data)
+}
+
+ipcMain.handle('open-file', async () => {
+  const response = await getFileFromUser()
+  return response
+})
+
+ipcMain.handle('save-file', async (_, data) => {
+  const response = await saveFile(data)
+  return response
+})

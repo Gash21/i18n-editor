@@ -24,6 +24,7 @@
     "@electron-toolkit/preload": "^1.0.3",
     "@electron-toolkit/utils": "^1.0.2",
     "@emotion/react": "^11.10.5",
+    "@logee-fe/i18n": "^0.0.7",
     "@mantine/core": "^5.10.2",
     "@mantine/hooks": "^5.10.2",
     "@tabler/icons": "^2.1.2",

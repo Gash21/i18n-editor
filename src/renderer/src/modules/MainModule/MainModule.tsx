@@ -1,61 +1,44 @@
-import { AppShell, Button } from '@mantine/core'
-import Navbar from '@renderer/components/layouts/Navbar'
-import sample from '@renderer/locale/sample.json'
+import { id, en } from '@logee-fe/i18n'
+import { Button, Container, Flex, NavLink, TextInput } from '@mantine/core'
 
 export default function MainModule(): JSX.Element {
-  const stage = 1
-
-  return (
-    <AppShell layout="alt" navbar={<Navbar />}>
-      <Group data={sample} stage={stage} label={'Logee Translation'} />
-    </AppShell>
-  )
-}
-
-function populateGroup(data, stage) {
-  const HTML: JSX.Element[] = []
-  for (const x in data) {
-    if (typeof data[x] === 'object') {
-      // console.log(`${x} push to group`)
-      HTML.push(<Groups data={data[x]} label={x} stage={stage} />)
-    }
-    // if (typeof data[x] === 'string') {
-    //   console.log(`${x} push to button`)
-    //   HTML.push(<LinkGroup label={x} value={data[x]} />)
-    // }
+  const openFile = async () => {
+    const res = await window.electron.ipcRenderer.invoke('open-file')
+    console.log(res)
   }
-  return HTML
-}
 
-function Group({ data, stage, label }) {
-  // console.log(groups)
+  const saveFile = async () => {
+    await window.electron.ipcRenderer.invoke('save-file', JSON.stringify(id, null, 2))
+  }
+  const RenderAccordion = ({ label, value }) => {
+    return <NavLink label={label}>{value}</NavLink>
+  }
+  const remap = (values: any) => {
+    return Object.entries(values).map(([label, value], index) => {
+      if (typeof value === 'string') {
+        return (
+          <Flex mt="lg" mb="lg" direction="column">
+            <TextInput icon="id" label={label} defaultValue={value} />
+            <TextInput icon="en" mt="sm" defaultValue={value} />
+          </Flex>
+        )
+      }
+      return <RenderAccordion label={label} value={remap(value)} />
+    })
+  }
+
   return (
-    <div>
-      <Button>
-        {stage} {label}
+    <Container m={2} p="lg" styles={{ width: '100vw' }}>
+      {Object.entries(id).map(([key, value]) => {
+        console.log(key)
+        return <NavLink label={key}>{remap(value)}</NavLink>
+      })}
+      <Button mt="lg" fullWidth onClick={openFile}>
+        Open File
       </Button>
-      <ol style={{ marginLeft: 10 }}>{populateGroup(data, stage + 1).map((el) => el)}</ol>
-    </div>
-  )
-}
-
-// function LinkGroup({ label, value }) {
-//   // console.log('LinkGroup', label, value)
-//   if (!value) {
-//     return (
-//       <Button>
-//         {label} : {value ? 'has value' : ''}
-//       </Button>
-//     )
-//   }
-// }
-
-function Groups({ data, stage, label }) {
-  // console.log('Groups', label, data)
-  return (
-    <div>
-      <br />
-      <Group label={label} data={data} stage={stage + 1} />
-    </div>
+      <Button mt="lg" fullWidth onClick={saveFile}>
+        Save File
+      </Button>
+    </Container>
   )
 }
