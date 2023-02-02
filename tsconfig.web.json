@@ -7,6 +7,9 @@
     "src/preload/*.d.ts"
   ],
   "compilerOptions": {
+    "types": [
+      "vite/client",
+    ],
     "composite": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
@@ -14,6 +17,23 @@
       "@renderer/*": [
         "src/renderer/src/*"
       ]
-    }
+    },
+    "allowJs": true,
+    "alwaysStrict": true,
+    "allowSyntheticDefaultImports": true,
+    "checkJs": true,
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "lib": [
+      "DOM",
+      "ESNext",
+      "dom.iterable",
+      "WebWorker"
+    ],
   }
 }
