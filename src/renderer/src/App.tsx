@@ -1,10 +1,10 @@
 import { MantineProvider } from '@mantine/core'
-import { MainModule } from './modules'
+import RouteProvider from './components/hoc/RouteProvider'
 
 function App(): JSX.Element {
   return (
-    <MantineProvider>
-      <MainModule />
+    <MantineProvider theme={{ colorScheme: 'dark' }}>
+      <RouteProvider />
     </MantineProvider>
   )
 }
