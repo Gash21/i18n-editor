@@ -35,6 +35,22 @@ const publicRoutes: Route<LocationGenerics>[] = [
     ]
   },
   {
+    path: '/open',
+    element: () =>
+      import('@renderer/components/layouts/EditorLayout').then(({ default: Component }) => (
+        <Component />
+      )),
+    children: [
+      {
+        path: '/',
+        element: () =>
+          import('@renderer/modules/MainModule').then(({ default: ChildComponent }) => (
+            <ChildComponent />
+          ))
+      }
+    ]
+  },
+  {
     element: <Navigate to="/home" />
   }
 ]

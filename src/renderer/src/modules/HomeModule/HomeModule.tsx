@@ -49,7 +49,7 @@ export default function HomeModule() {
             Buat Configurasi Baru
           </Text>
         </UnstyledButton>
-        <UnstyledButton className={classes.item}>
+        <UnstyledButton onClick={() => navigate({ to: '/open' })} className={classes.item}>
           <IconFolder size={70} color="violet" />
           <Text size="lg" mt={7} my="xl">
             Buka Folder

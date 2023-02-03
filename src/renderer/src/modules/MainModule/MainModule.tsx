@@ -1,5 +1,6 @@
-import { id, en } from '@logee-fe/i18n'
-import { Button, Container, Flex, NavLink, TextInput } from '@mantine/core'
+import { id } from '@logee-fe/i18n'
+import { Button, Flex, NavLink, TextInput } from '@mantine/core'
+// import { Fragment } from 'react'
 
 export default function MainModule(): JSX.Element {
   const openFile = async () => {
@@ -7,17 +8,18 @@ export default function MainModule(): JSX.Element {
     console.log(res)
   }
 
-  const saveFile = async () => {
-    await window.electron.ipcRenderer.invoke('save-file', JSON.stringify(id, null, 2))
-  }
+  // const saveFile = async () => {
+  //   await window.electron.ipcRenderer.invoke('save-file', JSON.stringify(id, null, 2))
+  // }
   const RenderAccordion = ({ label, value }) => {
     return <NavLink label={label}>{value}</NavLink>
   }
   const remap = (values: any) => {
     return Object.entries(values).map(([label, value]) => {
       if (typeof value === 'string') {
+        console.log(label)
         return (
-          <Flex key={label} mt="lg" mb="lg" direction="column">
+          <Flex direction="column" mb="lg" key={label}>
             <TextInput icon="id" label={label} defaultValue={value} />
             <TextInput icon="en" mt="sm" defaultValue={value} />
           </Flex>
@@ -28,9 +30,8 @@ export default function MainModule(): JSX.Element {
   }
 
   return (
-    <Container m={2} p="lg" styles={{ width: '100vw' }}>
+    <Flex direction="column">
       {Object.entries(id).map(([label, value]) => {
-        console.log(label)
         return (
           <NavLink key={label} label={label}>
             {remap(value)}
@@ -40,9 +41,6 @@ export default function MainModule(): JSX.Element {
       <Button mt="lg" fullWidth onClick={openFile}>
         Open File
       </Button>
-      {/* <Button mt="lg" fullWidth onClick={saveFile}>
-        Save File
-      </Button> */}
-    </Container>
+    </Flex>
   )
 }

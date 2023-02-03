@@ -5,8 +5,8 @@ import { FormProvider, useForm } from 'react-hook-form'
 
 export default function EditorLayout() {
   const methods = useForm()
-  const onSave = () => {
-    console.log('saved')
+  const onSave = (data) => {
+    console.log(data)
   }
   return (
     <form onSubmit={methods.handleSubmit(onSave)}>
