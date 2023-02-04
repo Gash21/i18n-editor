@@ -77,8 +77,7 @@ let activeFolder
 // code. You can also put them in separate files and require them here.
 const getFileFromUser = async () => {
   const folder = await dialog.showOpenDialog({
-    properties: ['openDirectory'],
-    filters: [{ name: 'JSON File', extensions: ['json'] }]
+    properties: ['openDirectory']
   })
 
   if (!folder) {
@@ -102,9 +101,21 @@ const getFileFromUser = async () => {
   return folder
 }
 
-const saveFile = (data) => {
-  console.log(data)
-  fs.writeFileSync(`${activeFolder}/helo.json`, data)
+const saveFile = async (data) => {
+  const folder = await dialog.showSaveDialog(mainWindow, {
+    properties: ['treatPackageAsDirectory'],
+    title: 'locale'
+  })
+  if (!folder) return
+
+  // console.log(folder, data)
+
+  if (folder.filePath) {
+    const savePath = path.resolve(folder.filePath)
+    fs.mkdirSync(savePath)
+    fs.writeFileSync(`${savePath}/id-ID.json`, JSON.stringify(data.id, null, 2))
+    fs.writeFileSync(`${savePath}/en-EN.json`, JSON.stringify(data.en, null, 2))
+  }
 }
 
 ipcMain.handle('open-file', async () => {

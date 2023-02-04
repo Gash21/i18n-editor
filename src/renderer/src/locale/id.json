@@ -1,0 +1,18 @@
+{
+  "newItem": "",
+  "newSegment": "pages.dashboard",
+  "id": {
+    "pages": {
+      "dashboard": {
+        "label": "Judul"
+      }
+    }
+  },
+  "en": {
+    "pages": {
+      "dashboard": {
+        "label": "Title"
+      }
+    }
+  }
+}

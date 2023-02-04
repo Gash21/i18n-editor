@@ -1,4 +1,16 @@
-import { Button, Code, Divider, Flex, Group, Modal, NavLink, Text, TextInput } from '@mantine/core'
+import {
+  Button,
+  Code,
+  Divider,
+  Flex,
+  Grid,
+  Group,
+  Modal,
+  NavLink,
+  Text,
+  TextInput,
+  createStyles
+} from '@mantine/core'
 import { unflattenObject } from '@renderer/utils/object'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
@@ -10,36 +22,54 @@ export default function EditorModule() {
   const [translationFlat, setTranslationFlat] = useState({})
   const [translation, setTranslation] = useState({})
   const [selectedPath, setSelectedPath] = useState('')
+  const [activeEditor, setActiveEditor] = useState({})
 
   const toggleModalSegment = useCallback(() => {
     setOpenSegModal((p) => !p)
   }, [openSegModal])
 
   const toggleModalItem = useCallback(() => {
+    if (!selectedPath) {
+      alert('Kamu belum memilih segment')
+      return
+    }
     setOpenItModal((p) => !p)
-  }, [openItModal])
+  }, [openItModal, selectedPath, translationFlat])
 
-  const saveSegment = useCallback(() => {
+  const saveSegment = () => {
     const value = watch('newSegment')
     if (value) {
       setTranslationFlat((p) => ({ ...p, [value]: {} }))
     }
     toggleModalSegment()
-  }, [])
+  }
 
   const saveItem = useCallback(() => {
     const value = watch('newItem')
     if (value) {
       const newValue = `${selectedPath}.${value}`
       setTranslationFlat((p) => ({ ...p, [newValue]: '' }))
+      setActiveData(newValue)
     }
     toggleModalItem()
   }, [selectedPath])
 
   useEffect(() => {
     setValue('newItem', '')
-    setTranslation(unflattenObject(translationFlat))
+    setTranslation({ ...unflattenObject(translationFlat) })
   }, [translationFlat])
+
+  const setActiveData = (id) => {
+    const newData = Object.keys(translationFlat).reduce((res, key) => {
+      if (key.indexOf(id) > -1) {
+        if (typeof translationFlat[key] === 'string') {
+          res[key] = translationFlat[key]
+        }
+      }
+      return res
+    }, {})
+    setActiveEditor(newData)
+  }
 
   const setActive = (id) => {
     setSelectedPath(id)
@@ -47,19 +77,36 @@ export default function EditorModule() {
 
   useEffect(() => {
     setValue('newSegment', selectedPath)
+    setActiveData(selectedPath)
   }, [selectedPath])
 
   return (
-    <Flex direction="column">
-      <Group>
-        <Button onClick={toggleModalSegment}>Add Segment</Button>
-        <Button onClick={toggleModalItem}>Add Item</Button>
-      </Group>
+    <Grid>
+      <Grid.Col sm={4} md={3}>
+        <Group mb="lg">
+          <Button variant="outline" onClick={toggleModalSegment}>
+            Add Segment
+          </Button>
+          <Button variant="outline" disabled={!selectedPath} onClick={toggleModalItem}>
+            Add Item
+          </Button>
+        </Group>
+        <Translation activePath={selectedPath} onClick={setActive} data={translation} parent="" />
+      </Grid.Col>
+      <Grid.Col sm={8} md={9}>
+        {Object.keys(activeEditor).map((label) => (
+          <InputGroup key={label} data={activeEditor[label]} name={label} label={label} />
+        ))}
+      </Grid.Col>
 
-      <Translation onClick={setActive} data={translation} parent="" />
       <Modal title="Add Segment" opened={openSegModal} centered onClose={toggleModalSegment}>
-        <Divider />
-        <TextInput {...register('newSegment')} />
+        <Divider mb="sm" />
+        <TextInput
+          value={watch('newSegment')}
+          onChange={({ target }) => {
+            setValue('newSegment', target.value.toLowerCase().replace(/[^a-zA-Z0-9.\-\_/]*$/g, ''))
+          }}
+        />
         <Group mt="xl">
           <Button variant="outline" onClick={saveSegment}>
             Buat Segment
@@ -83,50 +130,68 @@ export default function EditorModule() {
           </Button>
         </Group>
       </Modal>
-    </Flex>
+    </Grid>
   )
 }
 
-const Translation = ({ data, parent, onClick }) => {
-  const populateData = useCallback(
-    (translation) => {
-      const newParent = parent ? `${parent}.` : ''
-      const HTML: ReactNode[] = []
-      for (const x in translation) {
-        const id = `${newParent}${x}`
-        if (typeof translation[x] === 'object') {
-          HTML.push(<Accordion onClick={onClick} key={x} data={translation[x]} label={x} id={id} />)
-        } else {
-          console.log(x, 'masuk ke else')
-          HTML.push(<InputGroup key={x} label={x} data={translation[x]} name={id} />)
-        }
+const Translation = ({ data, parent, onClick, activePath }) => {
+  const populateData = (translation) => {
+    const newParent = parent ? `${parent}.` : ''
+    const HTML: ReactNode[] = []
+    for (const x in translation) {
+      const id = `${newParent}${x}`
+      if (typeof translation[x] === 'object') {
+        HTML.push(
+          <Accordion
+            onClick={onClick}
+            key={x}
+            data={translation[x]}
+            label={x}
+            id={id}
+            activePath={activePath}
+          />
+        )
       }
-      return HTML
-    },
-    [data]
-  )
+    }
+    return HTML
+  }
 
   return <div>{populateData(data).map((el) => el)}</div>
 }
 
-const Accordion = ({ data, label, id, onClick }) => {
+const AccordionStyles = createStyles(() => {
+  return {
+    navLink: {
+      borderLeft: '1px #61636a solid'
+    }
+  }
+})
+
+const Accordion = ({ data, label, id, onClick, activePath }) => {
+  const { classes } = AccordionStyles()
   if (!data) {
-    console.log(data, 'kosong')
     return <span></span>
   }
   return (
-    <NavLink onClick={() => onClick(id)} id={id} label={label}>
-      <Translation data={data} parent={`${id}`} onClick={onClick} />
-      {/* <Button variant="outline" my="sm" fullWidth>
-        Add Text Item
-      </Button> */}
+    <NavLink
+      childrenOffset={12}
+      onClick={() => onClick(id)}
+      id={id}
+      label={label}
+      active={id === activePath}
+      className={classes.navLink}
+      rightSection={null}
+    >
+      <Translation data={data} parent={`${id}`} onClick={onClick} activePath={activePath} />
     </NavLink>
   )
 }
 
 const InputGroup = ({ data, name, label }) => {
   const { register } = useFormContext()
-  console.log('Akhirnya masuk input', data, name)
+  if (typeof data !== 'string') {
+    return <span></span>
+  }
 
   return (
     <Flex direction="column" mx="sm">
