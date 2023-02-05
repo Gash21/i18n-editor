@@ -1,19 +1,99 @@
-import { ReactNode, useMemo, useState } from 'react'
+import { flattenObject, unflattenObject } from '@renderer/utils/object'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { EditorContext } from './useEditor'
 
 type IEditorProvProps = {
-  defaultValues: Record<string, any>
+  defaultValues: {}
+  defaultActivePath?: string
+  defaultSelected?: string
+  defaultActiveEditor?: {}
   children: ReactNode
 }
 
-export default function EditorProvider({ defaultValues, children }: IEditorProvProps) {
-  const [values, setValues] = useState(defaultValues)
+export default function EditorProvider({
+  defaultValues,
+  children,
+  defaultActivePath = '',
+  defaultSelected = '',
+  defaultActiveEditor = {}
+}: IEditorProvProps) {
+  const [values, setValues] = useState<{}>(defaultValues)
+  const [activePath, setActivePath] = useState(defaultActivePath)
+  const [selected, setSelected] = useState(defaultSelected)
+  const [activeEditor, setActiveEditor] = useState(defaultActiveEditor)
+  const [flattenValues, setFlattenValues] = useState(flattenObject(defaultValues))
 
-  const changeValues = (data) => {
-    setValues(data)
+  const add = (key: string, value = {}) => {
+    setFlattenValues((fV: {}) => ({ ...fV, [key]: value }))
   }
 
-  const contextValue = useMemo(() => ({ values, changeValues }), [values])
+  const handleKeyPress = useCallback(async (event) => {
+    const { keyCode, metaKey, ctrlKey, altKey } = event
+    switch (keyCode) {
+      case 79:
+        if (metaKey || ctrlKey) {
+          await open()
+        }
+        break
+      case 83:
+        if (altKey) {
+          console.log('create segment')
+        }
+        if (metaKey || ctrlKey) {
+          await save(values)
+        }
+        break
+      case 73:
+        if (altKey) {
+          console.log('create item')
+        }
+        break
+    }
+  }, [])
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [handleKeyPress])
+
+  const remove = (key: string) => {
+    const newValues = { ...flattenValues }
+    delete newValues[key]
+    setFlattenValues(newValues)
+  }
+
+  useEffect(() => {
+    setValues(unflattenObject(flattenValues))
+  }, [flattenValues])
+
+  const save = async (data) => {
+    await window.electron.ipcRenderer.invoke('save-file', { id: data.id, en: data.en })
+  }
+
+  const open = async () => {
+    const res = await window.electron.ipcRenderer.invoke('open-file')
+  }
+
+  const contextValue = useMemo(
+    () => ({
+      values,
+      flattenValues,
+      activePath,
+      activeEditor,
+      selected,
+      add,
+      remove,
+      setActivePath,
+      setActiveEditor,
+      setSelected,
+      save,
+      open
+    }),
+    [values, flattenValues, activePath, activeEditor, selected]
+  )
 
   return <EditorContext.Provider value={contextValue}>{children}</EditorContext.Provider>
 }

@@ -1,45 +1,41 @@
 import {
   Button,
-  Code,
   Divider,
   Flex,
   Grid,
   Group,
   Modal,
   NavLink,
-  Text,
   TextInput,
   createStyles
 } from '@mantine/core'
-import { unflattenObject } from '@renderer/utils/object'
+import { useEditor } from '@renderer/contexts/EditorContext'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 export default function EditorModule() {
-  const { register, watch, setValue } = useFormContext()
+  const { watch, setValue } = useFormContext()
+  const { values, flattenValues, activeEditor, selected, setSelected, setActiveEditor, add } =
+    useEditor()
   const [openSegModal, setOpenSegModal] = useState(false)
   const [openItModal, setOpenItModal] = useState(false)
-  const [translationFlat, setTranslationFlat] = useState({})
-  const [translation, setTranslation] = useState({})
-  const [selectedPath, setSelectedPath] = useState('')
-  const [activeEditor, setActiveEditor] = useState({})
 
   const toggleModalSegment = useCallback(() => {
     setOpenSegModal((p) => !p)
   }, [openSegModal])
 
   const toggleModalItem = useCallback(() => {
-    if (!selectedPath) {
+    if (!selected) {
       alert('Kamu belum memilih segment')
       return
     }
     setOpenItModal((p) => !p)
-  }, [openItModal, selectedPath, translationFlat])
+  }, [openItModal, selected, flattenValues])
 
   const saveSegment = () => {
-    const value = watch('newSegment')
-    if (value) {
-      setTranslationFlat((p) => ({ ...p, [value]: {} }))
+    const key = watch('newSegment')
+    if (key) {
+      add(key, {})
     }
     toggleModalSegment()
   }
@@ -47,23 +43,26 @@ export default function EditorModule() {
   const saveItem = useCallback(() => {
     const value = watch('newItem')
     if (value) {
-      const newValue = `${selectedPath}.${value}`
-      setTranslationFlat((p) => ({ ...p, [newValue]: '' }))
+      const newValue = `${selected}.${value}`
+      add(newValue, '')
       setActiveData(newValue)
     }
     toggleModalItem()
-  }, [selectedPath])
+  }, [selected])
+
+  useEffect(() => {
+    console.log(values)
+  }, [values])
 
   useEffect(() => {
     setValue('newItem', '')
-    setTranslation({ ...unflattenObject(translationFlat) })
-  }, [translationFlat])
+  }, [flattenValues])
 
   const setActiveData = (id) => {
-    const newData = Object.keys(translationFlat).reduce((res, key) => {
+    const newData = Object.keys(flattenValues).reduce((res, key) => {
       if (key.indexOf(id) > -1) {
-        if (typeof translationFlat[key] === 'string') {
-          res[key] = translationFlat[key]
+        if (typeof flattenValues[key] === 'string') {
+          res[key] = flattenValues[key]
         }
       }
       return res
@@ -71,27 +70,23 @@ export default function EditorModule() {
     setActiveEditor(newData)
   }
 
-  const setActive = (id) => {
-    setSelectedPath(id)
+  useEffect(() => {
+    setValue('newSegment', selected)
+    setActiveData(selected)
+  }, [selected])
+
+  const normalizeValue = (key: string, value: string) => {
+    let regex = /[^a-zA-Z0-9.\-\_]*$/g
+    if (key === 'newItem') {
+      regex = /[^a-zA-Z0-9\-\_]*$/g
+    }
+    setValue(key, value.toLowerCase().replace(regex, ''))
   }
 
-  useEffect(() => {
-    setValue('newSegment', selectedPath)
-    setActiveData(selectedPath)
-  }, [selectedPath])
-
   return (
-    <Grid>
-      <Grid.Col sm={4} md={3}>
-        <Group mb="lg">
-          <Button variant="outline" onClick={toggleModalSegment}>
-            Add Segment
-          </Button>
-          <Button variant="outline" disabled={!selectedPath} onClick={toggleModalItem}>
-            Add Item
-          </Button>
-        </Group>
-        <Translation activePath={selectedPath} onClick={setActive} data={translation} parent="" />
+    <Grid mih="90vh">
+      <Grid.Col sm={4} md={3} style={{ borderRight: '1px #61636a solid' }}>
+        <Translation selected={selected} onClick={setSelected} data={values} parent="" />
       </Grid.Col>
       <Grid.Col sm={8} md={9}>
         {Object.keys(activeEditor).map((label) => (
@@ -103,9 +98,7 @@ export default function EditorModule() {
         <Divider mb="sm" />
         <TextInput
           value={watch('newSegment')}
-          onChange={({ target }) => {
-            setValue('newSegment', target.value.toLowerCase().replace(/[^a-zA-Z0-9.\-\_/]*$/g, ''))
-          }}
+          onChange={({ target }) => normalizeValue('newSegment', target.value)}
         />
         <Group mt="xl">
           <Button variant="outline" onClick={saveSegment}>
@@ -113,28 +106,11 @@ export default function EditorModule() {
           </Button>
         </Group>
       </Modal>
-      <Modal title="Add Item Text" opened={openItModal} centered onClose={toggleModalItem}>
-        <Divider mb="sm" />
-        <Text mb="xs">Menambahkan translation text untuk segment</Text>
-        <Code>{selectedPath}</Code>
-        <Divider my="sm" />
-        <TextInput
-          label="Text Key"
-          placeholder="e.g label, warning, default"
-          labelProps={{ mb: 'sm' }}
-          {...register('newItem')}
-        />
-        <Group mt="xl">
-          <Button variant="outline" onClick={saveItem}>
-            Buat Item
-          </Button>
-        </Group>
-      </Modal>
     </Grid>
   )
 }
 
-const Translation = ({ data, parent, onClick, activePath }) => {
+const Translation = ({ data, parent, onClick, selected }) => {
   const populateData = (translation) => {
     const newParent = parent ? `${parent}.` : ''
     const HTML: ReactNode[] = []
@@ -148,7 +124,7 @@ const Translation = ({ data, parent, onClick, activePath }) => {
             data={translation[x]}
             label={x}
             id={id}
-            activePath={activePath}
+            selected={selected}
           />
         )
       }
@@ -167,7 +143,7 @@ const AccordionStyles = createStyles(() => {
   }
 })
 
-const Accordion = ({ data, label, id, onClick, activePath }) => {
+const Accordion = ({ data, label, id, onClick, selected }) => {
   const { classes } = AccordionStyles()
   if (!data) {
     return <span></span>
@@ -175,14 +151,15 @@ const Accordion = ({ data, label, id, onClick, activePath }) => {
   return (
     <NavLink
       childrenOffset={12}
+      py={4}
       onClick={() => onClick(id)}
       id={id}
       label={label}
-      active={id === activePath}
+      active={id === selected}
       className={classes.navLink}
       rightSection={null}
     >
-      <Translation data={data} parent={`${id}`} onClick={onClick} activePath={activePath} />
+      <Translation data={data} parent={`${id}`} onClick={onClick} selected={selected} />
     </NavLink>
   )
 }

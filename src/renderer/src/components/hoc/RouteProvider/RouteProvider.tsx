@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Outlet, ReactLocation, Router } from '@tanstack/react-location'
 import { ReactElement } from 'react'
 import { publicRoutes, LocationGenerics } from '@renderer/routes'
