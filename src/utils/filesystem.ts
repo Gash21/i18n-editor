@@ -3,6 +3,9 @@ import { resolve } from "@tauri-apps/api/path";
 
 export const openFolder = async (path: string) => {
   const folders = await readDir(path, { recursive: true });
+  if (!folders) {
+    return;
+  }
   const contents = { id: {}, en: {}, path, values: {} };
   if (folders.length > 0) {
     folders.forEach(async (item) => {
@@ -37,7 +40,7 @@ export const saveFolder = async (
   data: Record<string, any> | undefined,
   path: string
 ) => {
-  if (data.id && data.en) {
+  if (data && data.id && data.en) {
     writeFile(`${path}/id-ID.json`, JSON.stringify(data.id, null, 2));
     writeFile(`${path}/en-EN.json`, JSON.stringify(data.en, null, 2));
   }

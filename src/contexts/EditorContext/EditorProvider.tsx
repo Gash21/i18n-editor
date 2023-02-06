@@ -1,9 +1,9 @@
 import { flattenObject, unflattenObject } from "@renderer/utils/object";
-import { dialog, fs, path } from "@tauri-apps/api";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { EditorContext } from "./useEditor";
 import { noop } from "@mantine/utils";
-import { openFolder, saveFolder } from "@renderer/utils/filesystem";
+import { openFolder } from "@renderer/utils/filesystem";
+import { dialog } from "@tauri-apps/api";
 
 type IEditorProvProps = {
   defaultValues: {};
@@ -92,15 +92,16 @@ export default function EditorProvider({
     setValues(unflattenObject(flattenValues));
   }, [flattenValues]);
 
-  const save = async (data: Record<string, any> | undefined) => {
-    if (activePath && data && data.id && data.en) {
-      await saveFolder({ id: data.id, en: data.en }, activePath);
-    }
+  const save = async (data) => {
+    console.log(data);
+    // await window.electron.ipcRenderer.invoke("save-file", {
+    //   id: data.id,
+    //   en: data.en,
+    // });
   };
 
-  const saveAs = async (data: Record<string, any> | undefined) => {
+  const saveAs = async (data) => {
     console.log(data);
-
     // await window.electron.ipcRenderer.invoke("save-as-file", {
     //   id: data.id,
     //   en: data.en,
@@ -112,10 +113,12 @@ export default function EditorProvider({
 
     if (path && !Array.isArray(path)) {
       const res = await openFolder(path);
-      setFormValues({ id: res.id, en: res.en });
-      setValues(res.values);
-      setFlattenValues(flattenObject(res.values));
-      setActivePath(res.path);
+      if (res) {
+        setFormValues({ id: res.id, en: res.en });
+        setValues(res.values);
+        setFlattenValues(flattenObject(res.values));
+        setActivePath(res.path);
+      }
     }
   };
 

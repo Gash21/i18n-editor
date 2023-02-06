@@ -3,7 +3,7 @@ import { IconX } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
 
 type IInputGroup = {
-  data: Record<string, any> | undefined;
+  data: Record<string, any>;
   name: string;
   label: string;
   onDelete: () => void;
@@ -32,7 +32,6 @@ export default function InputGroup({
               leftIcon={<IconX size={12} />}
               size="sm"
               variant="outline"
-              // sx={{ height: 24 }}
               compact
               color="red"
               onClick={onDelete}
