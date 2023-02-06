@@ -1,15 +1,15 @@
-import { Flex, Grid, Code, Button, ActionIcon, Group, Text } from '@mantine/core'
-import ModalConfirmDelete from '@renderer/components/forms/ModalConfirmDelete'
-import EmptyEditor from '@renderer/components/groups/EmptyEditor'
-import InputGroup from '@renderer/components/groups/InputGroup'
-import TranslationPath from '@renderer/components/groups/TranslationPath'
-import { useEditor } from '@renderer/contexts/EditorContext'
-import { IconX } from '@tabler/icons-react'
-import { useCallback, useEffect, useState } from 'react'
-import { useFormContext } from 'react-hook-form'
+import { Flex, Grid, Code, Button, ActionIcon, Group, Text } from '@mantine/core';
+import ModalConfirmDelete from '@renderer/components/forms/ModalConfirmDelete';
+import EmptyEditor from '@renderer/components/groups/EmptyEditor';
+import InputGroup from '@renderer/components/groups/InputGroup';
+import TranslationPath from '@renderer/components/groups/TranslationPath';
+import { useEditor } from '@renderer/contexts/EditorContext';
+import { IconX } from '@tabler/icons-react';
+import { useCallback, useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 export default function EditorModule() {
-  const { setValue } = useFormContext()
+  const { setValue } = useFormContext();
   const {
     values,
     flattenValues,
@@ -19,44 +19,44 @@ export default function EditorModule() {
     setActiveEditor,
     activePath,
     remove
-  } = useEditor()
+  } = useEditor();
 
-  const [openModal, setOpenModal] = useState(false)
-  const [modalType, setModalType] = useState<'namespace' | 'item' | undefined>('namespace')
-  const [selectedDelete, setSelectedDelete] = useState(selected)
+  const [openModal, setOpenModal] = useState(false);
+  const [modalType, setModalType] = useState<'namespace' | 'item' | undefined>('namespace');
+  const [selectedDelete, setSelectedDelete] = useState(selected);
 
   const toggleModal = useCallback(
     (type: 'item' | 'namespace' | undefined, selectedDel: string | undefined) => {
-      setOpenModal((p) => !p)
-      setModalType(type)
-      setSelectedDelete(selectedDel)
+      setOpenModal((p) => !p);
+      setModalType(type);
+      setSelectedDelete(selectedDel);
     },
     [openModal]
-  )
+  );
 
   useEffect(() => {
-    setValue('newItem', '')
-  }, [flattenValues])
+    setValue('newItem', '');
+  }, [flattenValues]);
 
   const setActiveData = (id: string | undefined) => {
     const newData = Object.keys(flattenValues).reduce(
       (res: Record<string, any>, key: string | undefined) => {
         if (key && id && key.indexOf(id) > -1) {
           if (typeof flattenValues[key] === 'string') {
-            res[key] = flattenValues[key]
+            res[key] = flattenValues[key];
           }
         }
-        return res
+        return res;
       },
       {}
-    )
-    setActiveEditor(newData)
-  }
+    );
+    setActiveEditor(newData);
+  };
 
   useEffect(() => {
-    setValue('namespace', selected)
-    setActiveData(selected)
-  }, [selected])
+    setValue('namespace', selected);
+    setActiveData(selected);
+  }, [selected]);
 
   return (
     <>
@@ -68,7 +68,7 @@ export default function EditorModule() {
         >
           <Flex direction="row" justify="space-between" gap="md" align="center" mb="xl">
             <Code w="100%">
-              Path :{activePath ? `...${activePath?.slice(-(20 - 3))}` : `untitled`}
+              Path : {activePath ? `...${activePath?.slice(-(20 - 3))}` : `untitled`}
             </Code>
             <ActionIcon
               variant="outline"
@@ -106,5 +106,5 @@ export default function EditorModule() {
         type={modalType}
       />
     </>
-  )
+  );
 }

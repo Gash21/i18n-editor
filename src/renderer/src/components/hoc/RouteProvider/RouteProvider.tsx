@@ -1,14 +1,15 @@
 // @ts-nocheck
-import { Outlet, ReactLocation, Router } from '@tanstack/react-location'
-import { ReactElement } from 'react'
-import { publicRoutes, LocationGenerics } from '@renderer/routes'
+import { createHashHistory, Outlet, ReactLocation, Router } from '@tanstack/react-location';
+import { ReactElement } from 'react';
+import { publicRoutes, LocationGenerics } from '@renderer/routes';
 
-export const L = new ReactLocation<LocationGenerics>()
+export const L = new ReactLocation<LocationGenerics>();
 
-const location = new ReactLocation()
+const history = createHashHistory();
+const location = new ReactLocation({ history });
 
 export default function RouteProvider(): ReactElement {
-  const routes = publicRoutes
+  const routes = publicRoutes;
   return (
     <Router
       defaultPendingElement={
@@ -30,5 +31,5 @@ export default function RouteProvider(): ReactElement {
     >
       <Outlet />
     </Router>
-  )
+  );
 }
