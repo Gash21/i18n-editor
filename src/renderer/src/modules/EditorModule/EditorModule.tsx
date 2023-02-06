@@ -1,4 +1,4 @@
-import { Flex, Grid, Code, Paper } from '@mantine/core'
+import { Flex, Grid, Code } from '@mantine/core'
 import EmptyEditor from '@renderer/components/groups/EmptyEditor'
 import InputGroup from '@renderer/components/groups/InputGroup'
 import TranslationPath from '@renderer/components/groups/TranslationPath'

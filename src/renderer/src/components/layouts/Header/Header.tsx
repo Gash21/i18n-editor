@@ -4,12 +4,10 @@ import {
   createStyles,
   Group,
   Header as HeaderWrapper,
-  Image,
   Menu,
   Text,
   useMantineTheme
 } from '@mantine/core'
-import LogoTop from '@renderer/assets/logo-top.svg'
 import { useEditor } from '@renderer/contexts/EditorContext'
 import { checkOS } from '@renderer/utils/devices'
 import {

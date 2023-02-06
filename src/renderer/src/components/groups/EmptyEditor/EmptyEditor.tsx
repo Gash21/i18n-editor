@@ -1,4 +1,4 @@
-import { createStyles, Flex, Grid, Text, Title, UnstyledButton } from '@mantine/core'
+import { createStyles, Flex, Text, UnstyledButton } from '@mantine/core'
 import { useEditor } from '@renderer/contexts/EditorContext'
 import { IconFolder, IconFolderPlus } from '@tabler/icons-react'
 
