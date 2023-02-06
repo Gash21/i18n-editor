@@ -1,6 +1,6 @@
-import { ActionIcon, Button, Flex, Text, TextInput } from "@mantine/core";
-import { IconX } from "@tabler/icons-react";
-import { useFormContext } from "react-hook-form";
+import { ActionIcon, Button, Flex, Text, TextInput } from '@mantine/core';
+import { IconX } from '@tabler/icons-react';
+import { useFormContext } from 'react-hook-form';
 
 type IInputGroup = {
   data: Record<string, any>;
@@ -9,14 +9,9 @@ type IInputGroup = {
   onDelete: () => void;
 };
 
-export default function InputGroup({
-  data,
-  name,
-  label,
-  onDelete,
-}: IInputGroup) {
+export default function InputGroup({ data, name, label, onDelete }: IInputGroup) {
   const { register, setValue } = useFormContext();
-  if (typeof data !== "string") {
+  if (typeof data !== 'string') {
     return <span></span>;
   }
 
@@ -24,7 +19,7 @@ export default function InputGroup({
     <Flex direction="column" mx="sm">
       <TextInput
         icon="id"
-        styles={{ label: { width: "100%" } }}
+        styles={{ label: { width: '100%' } }}
         label={
           <Flex w="100%" direction="row" justify="space-between" align="center">
             <Text>{label}</Text>
@@ -40,13 +35,13 @@ export default function InputGroup({
             </Button>
           </Flex>
         }
-        labelProps={{ my: "sm" }}
+        labelProps={{ my: 'sm' }}
         mb="sm"
         rightSection={
           <ActionIcon
             p={0}
             onClick={() => {
-              setValue(`id.${name}`, "");
+              setValue(`id.${name}`, '');
             }}
           >
             <IconX size={12} />
@@ -61,7 +56,7 @@ export default function InputGroup({
           <ActionIcon
             p={0}
             onClick={() => {
-              setValue(`en.${name}`, "");
+              setValue(`en.${name}`, '');
             }}
           >
             <IconX size={12} />

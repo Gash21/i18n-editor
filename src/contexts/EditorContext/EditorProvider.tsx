@@ -93,19 +93,11 @@ export default function EditorProvider({
   }, [flattenValues]);
 
   const save = async (data: Record<string, any> | undefined) => {
-    console.log(data);
-    // await window.electron.ipcRenderer.invoke("save-file", {
-    //   id: data.id,
-    //   en: data.en,
-    // });
+    // await window.electron.ipcRenderer.invoke('save-file', { id: data.id, en: data.en })
   };
 
   const saveAs = async (data: Record<string, any> | undefined) => {
-    console.log(data);
-    // await window.electron.ipcRenderer.invoke("save-as-file", {
-    //   id: data.id,
-    //   en: data.en,
-    // });
+    // await window.electron.ipcRenderer.invoke('save-as-file', { id: data.id, en: data.en })
   };
 
   const open = async () => {
