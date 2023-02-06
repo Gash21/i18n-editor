@@ -1,13 +1,25 @@
-import { createStyles, NavLink } from '@mantine/core'
-import { ReactNode } from 'react'
+import { createStyles, NavLink } from "@mantine/core";
+import { ReactNode } from "react";
 
-export default function Translation({ data, parent, onClick, selected }) {
-  const populateData = (translation) => {
-    const newParent = parent ? `${parent}.` : ''
-    const HTML: ReactNode[] = []
+type ITranslationProps = {
+  data: Record<string, any> | undefined;
+  parent: string;
+  onClick: (id: string) => void;
+  selected?: string;
+};
+
+export default function Translation({
+  data,
+  parent,
+  onClick,
+  selected,
+}: ITranslationProps) {
+  const populateData = (translation: Record<string, any>) => {
+    const newParent = parent ? `${parent}.` : "";
+    const HTML: ReactNode[] = [];
     for (const x in translation) {
-      const id = `${newParent}${x}`
-      if (typeof translation[x] === 'object') {
+      const id = `${newParent}${x}`;
+      if (typeof translation[x] === "object") {
         HTML.push(
           <Accordion
             onClick={onClick}
@@ -17,27 +29,35 @@ export default function Translation({ data, parent, onClick, selected }) {
             id={id}
             selected={selected}
           />
-        )
+        );
       }
     }
-    return HTML
-  }
+    return HTML;
+  };
 
-  return <div>{populateData(data).map((el) => el)}</div>
+  return <div>{data && populateData(data).map((el) => el)}</div>;
 }
 
 const AccordionStyles = createStyles(() => {
   return {
     navLink: {
-      borderLeft: '1px #61636a solid'
-    }
-  }
-})
+      borderLeft: "1px #61636a solid",
+    },
+  };
+});
 
-const Accordion = ({ data, label, id, onClick, selected }) => {
-  const { classes } = AccordionStyles()
+type IAccordionProps = {
+  data: Record<string, any> | undefined;
+  label?: string;
+  onClick: (id: string) => void;
+  id: string;
+  selected?: string;
+};
+
+const Accordion = ({ data, label, id, onClick, selected }: IAccordionProps) => {
+  const { classes } = AccordionStyles();
   if (!data) {
-    return <span></span>
+    return <span></span>;
   }
   return (
     <NavLink
@@ -50,7 +70,12 @@ const Accordion = ({ data, label, id, onClick, selected }) => {
       className={classes.navLink}
       rightSection={null}
     >
-      <Translation data={data} parent={`${id}`} onClick={onClick} selected={selected} />
+      <Translation
+        data={data}
+        parent={`${id}`}
+        onClick={onClick}
+        selected={selected}
+      />
     </NavLink>
-  )
-}
+  );
+};

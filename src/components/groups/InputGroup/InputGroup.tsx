@@ -1,10 +1,15 @@
-import { Flex, TextInput } from '@mantine/core'
-import { useFormContext } from 'react-hook-form'
+import { Flex, TextInput } from "@mantine/core";
+import { useFormContext } from "react-hook-form";
 
-export default function InputGroup({ data, name, label }) {
-  const { register } = useFormContext()
-  if (typeof data !== 'string') {
-    return <span></span>
+type IInputProps = {
+  data: Record<string, any>;
+  name: string;
+  label: string;
+};
+export default function InputGroup({ data, name, label }: IInputProps) {
+  const { register } = useFormContext();
+  if (typeof data !== "string") {
+    return <span></span>;
   }
 
   return (
@@ -12,11 +17,11 @@ export default function InputGroup({ data, name, label }) {
       <TextInput
         icon="id"
         label={label}
-        labelProps={{ my: 'sm' }}
+        labelProps={{ my: "sm" }}
         mb="sm"
         {...register(`id.${name}`)}
       />
       <TextInput icon="en" {...register(`en.${name}`)} />
     </Flex>
-  )
+  );
 }
