@@ -19,10 +19,6 @@ export default function EditorModule() {
   } = useEditor()
 
   useEffect(() => {
-    console.log(values)
-  }, [values])
-
-  useEffect(() => {
     setValue('newItem', '')
   }, [flattenValues])
 

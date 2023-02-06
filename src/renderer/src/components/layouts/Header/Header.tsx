@@ -66,7 +66,7 @@ type IHeaderProps = {
 
 export default function Header({ openNamespace, openItem }: IHeaderProps) {
   const theme = useMantineTheme()
-  const { selected, activePath } = useEditor()
+  const { selected, activePath, open } = useEditor()
   const { classes } = useStyles()
 
   const altText = checkOS() !== 'macos' ? 'alt' : '⌥'
@@ -87,7 +87,7 @@ export default function Header({ openNamespace, openItem }: IHeaderProps) {
                 sx={{ height: 30 }}
                 pr={12}
               >
-                Tambah Baru
+                Add
               </Button>
             </Menu.Target>
             <Menu.Dropdown>
@@ -120,6 +120,17 @@ export default function Header({ openNamespace, openItem }: IHeaderProps) {
             </Menu.Dropdown>
           </Menu>
           <Button
+            variant="outline"
+            disabled={!activePath}
+            sx={{ height: 30 }}
+            onClick={open}
+            type="button"
+            leftIcon={<IconDeviceFloppy size={16} />}
+          >
+            Open Folder
+          </Button>
+          <Button
+            variant="outline"
             disabled={!activePath}
             sx={{ height: 30 }}
             type="submit"

@@ -1,6 +1,7 @@
 import { flattenObject, unflattenObject } from '@renderer/utils/object'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { EditorContext } from './useEditor'
+import { noop } from '@mantine/utils'
 
 type IEditorProvProps = {
   defaultValues: {}
@@ -41,7 +42,7 @@ export default function EditorProvider({
         break
       case 83:
         if (altKey) {
-          console.log('create segment')
+          noop()
         }
         if (metaKey || ctrlKey) {
           await save(values)
@@ -49,7 +50,7 @@ export default function EditorProvider({
         break
       case 73:
         if (altKey) {
-          console.log('create item')
+          noop()
         }
         break
     }
