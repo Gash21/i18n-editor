@@ -7,7 +7,6 @@ import {
   Image,
   Menu,
   Text,
-  Tooltip,
   useMantineTheme
 } from '@mantine/core'
 import LogoTop from '@renderer/assets/logo-top.svg'
@@ -16,6 +15,7 @@ import { checkOS } from '@renderer/utils/devices'
 import {
   IconChevronDown,
   IconDeviceFloppy,
+  IconLanguage,
   IconPackage,
   IconPlus,
   IconSquareCheck
@@ -61,9 +61,9 @@ const useStyles = createStyles((theme) => ({
   }
 }))
 
-export default function Header({ openSegment, openItem }) {
+export default function Header({ openNamespace, openItem }) {
   const theme = useMantineTheme()
-  const { selected } = useEditor()
+  const { selected, activePath } = useEditor()
   const { classes } = useStyles()
 
   const altText = checkOS() !== 'macos' ? 'alt' : '⌥'
@@ -71,13 +71,14 @@ export default function Header({ openSegment, openItem }) {
     <HeaderWrapper height={60} sx={{ borderBottom: 0 }} mb={120}>
       <Container className={classes.inner} fluid>
         <Group>
-          <Image src={LogoTop} height={36} />
+          <IconLanguage /> <Text>i18n Editor</Text>
         </Group>
         <Group spacing={5} className={classes.links}></Group>
         <Group>
           <Menu transition="pop-top-right" position="top-end" width={220} withinPortal>
             <Menu.Target>
               <Button
+                disabled={!activePath}
                 leftIcon={<IconPlus size={18} stroke={1.5} />}
                 rightIcon={<IconChevronDown size={18} stroke={1.5} />}
                 sx={{ height: 30 }}
@@ -89,7 +90,8 @@ export default function Header({ openSegment, openItem }) {
             <Menu.Dropdown>
               <Menu.Item
                 sx={{ height: 30 }}
-                onClick={openSegment}
+                onClick={openNamespace}
+                disabled={activePath === ''}
                 icon={<IconPackage size={16} color={theme.colors.blue[6]} stroke={1.5} />}
                 rightSection={
                   <Text size="xs" transform="uppercase" weight={700} color="dimmed">
@@ -97,7 +99,7 @@ export default function Header({ openSegment, openItem }) {
                   </Text>
                 }
               >
-                Segment
+                Namespace
               </Menu.Item>
               <Menu.Item
                 sx={{ height: 30 }}
@@ -114,7 +116,12 @@ export default function Header({ openSegment, openItem }) {
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
-          <Button sx={{ height: 30 }} type="submit" leftIcon={<IconDeviceFloppy size={16} />}>
+          <Button
+            disabled={!activePath}
+            sx={{ height: 30 }}
+            type="submit"
+            leftIcon={<IconDeviceFloppy size={16} />}
+          >
             Save
           </Button>
         </Group>

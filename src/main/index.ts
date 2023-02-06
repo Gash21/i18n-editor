@@ -89,16 +89,33 @@ const getFileFromUser = async () => {
   const fileContents = fs.readdirSync(activeFolder)
 
   if (fileContents.length > 0) {
-    const contents = fileContents.map((item) => {
-      const filePath = path.resolve(folder.filePaths[0], item)
-      const fileBuffer = fs.readFileSync(filePath)
-      const content = Buffer.from(fileBuffer).toString()
-      return JSON.parse(content)
-    })
-    if (contents.length > 0) return contents
-  }
+    const contents = fileContents.reduce(
+      (res, item) => {
+        if (item.indexOf('id') > -1 || item.indexOf('en') > -1) {
+          const filePath = path.resolve(folder.filePaths[0], item)
+          const fileBuffer = fs.readFileSync(filePath)
+          const content = Buffer.from(fileBuffer).toString()
+          if (item.indexOf('id') > -1) {
+            res.id = JSON.parse(content)
+          }
+          if (item.indexOf('en') > -1) {
+            res.en = JSON.parse(content)
+          }
+        }
+        return res
+      },
+      { id: {}, en: {}, values: {}, path: activeFolder }
+    )
 
-  return folder
+    if (Object.keys(contents.id).length > 0 || Object.keys(contents.en).length > 0) {
+      Object.assign(contents.values, { ...contents.id }, { ...contents.en })
+      return contents
+    }
+  }
+  fs.writeFileSync(`${activeFolder}/id-ID.json`, JSON.stringify({}, null, 2))
+  fs.writeFileSync(`${activeFolder}/en-EN.json`, JSON.stringify({}, null, 2))
+
+  return { id: {}, en: {}, values: {}, path: activeFolder }
 }
 
 const saveFile = async (data) => {
@@ -107,8 +124,6 @@ const saveFile = async (data) => {
     title: 'locale'
   })
   if (!folder) return
-
-  // console.log(folder, data)
 
   if (folder.filePath) {
     const savePath = path.resolve(folder.filePath)

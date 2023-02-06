@@ -18,6 +18,7 @@ export default function EditorProvider({
   defaultActiveEditor = {}
 }: IEditorProvProps) {
   const [values, setValues] = useState<{}>(defaultValues)
+  const [formValues, setFormValues] = useState<{}>({ id: defaultValues, en: defaultValues })
   const [activePath, setActivePath] = useState(defaultActivePath)
   const [selected, setSelected] = useState(defaultSelected)
   const [activeEditor, setActiveEditor] = useState(defaultActiveEditor)
@@ -75,6 +76,10 @@ export default function EditorProvider({
 
   const open = async () => {
     const res = await window.electron.ipcRenderer.invoke('open-file')
+    setFormValues({ id: res.id, en: res.en })
+    setValues(res.values)
+    setFlattenValues(flattenObject(res.values))
+    setActivePath(res.path)
   }
 
   const contextValue = useMemo(
@@ -84,15 +89,17 @@ export default function EditorProvider({
       activePath,
       activeEditor,
       selected,
+      formValues,
       add,
       remove,
       setActivePath,
       setActiveEditor,
       setSelected,
+      setFormValues,
       save,
       open
     }),
-    [values, flattenValues, activePath, activeEditor, selected]
+    [values, flattenValues, activePath, activeEditor, selected, formValues]
   )
 
   return <EditorContext.Provider value={contextValue}>{children}</EditorContext.Provider>

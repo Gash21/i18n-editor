@@ -2,7 +2,7 @@ import { Button, Divider, Group, Modal, TextInput } from '@mantine/core'
 import { useFormContext } from 'react-hook-form'
 import { useEditor } from '@renderer/contexts/EditorContext'
 
-export default function SegmentModal({ opened, toggleModal }) {
+export default function NamespaceModal({ opened, toggleModal }) {
   const { watch, setValue } = useFormContext()
   const { add } = useEditor()
 
@@ -12,22 +12,22 @@ export default function SegmentModal({ opened, toggleModal }) {
   }
 
   const onSave = () => {
-    const key = watch('newSegment')
+    const key = watch('newNamespace')
     if (key) {
       add(key, {})
     }
     toggleModal()
   }
   return (
-    <Modal title="Add Segment" opened={opened} centered onClose={toggleModal}>
+    <Modal title="Add Namespace" opened={opened} centered onClose={toggleModal}>
       <Divider mb="sm" />
       <TextInput
-        value={watch('newSegment')}
-        onChange={({ target }) => normalizeValue('newSegment', target.value)}
+        value={watch('newNamespace')}
+        onChange={({ target }) => normalizeValue('newNamespace', target.value)}
       />
       <Group mt="xl">
         <Button variant="outline" onClick={onSave}>
-          Buat Segment
+          Buat Namespace
         </Button>
       </Group>
     </Modal>
