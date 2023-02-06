@@ -1,4 +1,4 @@
-# logee-i18n-tools
+# i18n-tools
 
 An Electron application with React and TypeScript
 

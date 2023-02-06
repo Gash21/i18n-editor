@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: logee-i18n-tools
+productName: i18n-tools
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ asarUnpack:
   - resources/*
 afterSign: build/notarize.js
 win:
-  executableName: logee-i18n-tools
+  executableName: i18n Tools
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

@@ -1,11 +1,11 @@
 {
-  "name": "logee-i18n-tools",
+  "name": "i18n-tools",
   "version": "1.0.0",
-  "description": "An Electron application with React and TypeScript",
+  "description": "An i18n Tools application with React and TypeScript",
   "main": "./out/main/index.js",
-  "author": "example.com",
-  "homepage": "https://www.electronjs.org",
-  "license": "ISC",
+  "author": "Gash21 <galiharghubi@gmail.com> (https://github.com/Gash21)",
+  "homepage": "https://github.com/Gash21/i18n-editor#readme",
+  "license": "MIT",
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
