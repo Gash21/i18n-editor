@@ -32,14 +32,14 @@ const FormLayout = () => {
     setOpenItem((p) => !p)
   }, [openItem])
   return (
-    <form onSubmit={methods.handleSubmit(save)}>
-      <AppShell header={<Header openNamespace={toggleNamespace} openItem={toggleItem} />}>
-        <FormProvider {...methods}>
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(save)}>
+        <AppShell header={<Header openNamespace={toggleNamespace} openItem={toggleItem} />}>
           <Outlet />
           <ModalNamespace opened={openNamespace} toggleModal={toggleNamespace} />
           <ModalItem opened={openItem} toggleModal={toggleItem} />
-        </FormProvider>
-      </AppShell>
-    </form>
+        </AppShell>
+      </form>
+    </FormProvider>
   )
 }

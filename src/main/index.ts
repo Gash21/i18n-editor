@@ -77,7 +77,7 @@ let activeFolder
 // code. You can also put them in separate files and require them here.
 const getFileFromUser = async () => {
   const folder = await dialog.showOpenDialog({
-    properties: ['openDirectory']
+    properties: ['openDirectory', 'createDirectory']
   })
 
   if (!folder) {
@@ -118,7 +118,7 @@ const getFileFromUser = async () => {
   return { id: {}, en: {}, values: {}, path: activeFolder }
 }
 
-const saveFile = async (data) => {
+const saveAsFile = async (data) => {
   const folder = await dialog.showSaveDialog(mainWindow, {
     properties: ['treatPackageAsDirectory'],
     title: 'locale'
@@ -133,8 +133,27 @@ const saveFile = async (data) => {
   }
 }
 
+const saveFile = async (data) => {
+  console.log(data)
+  if (activeFolder) {
+    const savePath = path.resolve(activeFolder)
+    if (!fs.existsSync(savePath)) {
+      fs.mkdirSync(savePath)
+    }
+    if (data.id && data.en) {
+      fs.writeFileSync(`${savePath}/id-ID.json`, JSON.stringify(data.id, null, 2))
+      fs.writeFileSync(`${savePath}/en-EN.json`, JSON.stringify(data.en, null, 2))
+    }
+  }
+}
+
 ipcMain.handle('open-file', async () => {
   const response = await getFileFromUser()
+  return response
+})
+
+ipcMain.handle('save-as-file', async (_, data) => {
+  const response = await saveAsFile(data)
   return response
 })
 

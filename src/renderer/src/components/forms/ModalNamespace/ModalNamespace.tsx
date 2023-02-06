@@ -17,7 +17,7 @@ export default function NamespaceModal({ opened, toggleModal }: IModalProps) {
   }
 
   const onSave = () => {
-    const key = watch('newNamespace')
+    const key = watch('namespace')
     if (key) {
       add(key, {})
     }
@@ -27,12 +27,12 @@ export default function NamespaceModal({ opened, toggleModal }: IModalProps) {
     <Modal title="Add Namespace" opened={opened} centered onClose={toggleModal}>
       <Divider mb="sm" />
       <TextInput
-        value={watch('newNamespace')}
-        onChange={({ target }) => normalizeValue('newNamespace', target.value)}
+        value={watch('namespace')}
+        onChange={({ target }) => normalizeValue('namespace', target.value)}
       />
       <Group mt="xl">
         <Button variant="outline" onClick={onSave}>
-          Buat Namespace
+          Create Namespace
         </Button>
       </Group>
     </Modal>

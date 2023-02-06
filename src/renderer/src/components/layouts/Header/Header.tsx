@@ -13,11 +13,14 @@ import { checkOS } from '@renderer/utils/devices'
 import {
   IconChevronDown,
   IconDeviceFloppy,
+  IconFolder,
   IconLanguage,
   IconPackage,
   IconPlus,
   IconSquareCheck
 } from '@tabler/icons-react'
+import { useEffect } from 'react'
+import { useFormContext } from 'react-hook-form'
 
 const useStyles = createStyles((theme) => ({
   inner: {
@@ -66,10 +69,29 @@ type IHeaderProps = {
 
 export default function Header({ openNamespace, openItem }: IHeaderProps) {
   const theme = useMantineTheme()
-  const { selected, activePath, open } = useEditor()
+  const { watch } = useFormContext()
+  const { selected, activePath, open, save, saveAs, setFormValues } = useEditor()
   const { classes } = useStyles()
 
+  useEffect(() => {
+    const subscription = watch((value, { name }) => {
+      if (name && name !== 'namespace' && name !== 'newItem') {
+        setFormValues({ id: value.id, en: value.en })
+      }
+    })
+    return () => subscription.unsubscribe()
+  }, [watch])
+
   const altText = checkOS() !== 'macos' ? 'alt' : '⌥'
+  const ctrlText = checkOS() !== 'macos' ? 'ctrl' : '⌘'
+
+  const onSave = (isSaveAs: boolean | undefined = false) => {
+    if (saveAs) {
+      saveAs(watch())
+    } else {
+      save(watch())
+    }
+  }
   return (
     <HeaderWrapper height={60} sx={{ borderBottom: 0 }} mb={120}>
       <Container className={classes.inner} fluid>
@@ -125,19 +147,51 @@ export default function Header({ openNamespace, openItem }: IHeaderProps) {
             sx={{ height: 30 }}
             onClick={open}
             type="button"
-            leftIcon={<IconDeviceFloppy size={16} />}
+            leftIcon={<IconFolder size={16} />}
           >
             Open Folder
           </Button>
-          <Button
-            variant="outline"
-            disabled={!activePath}
-            sx={{ height: 30 }}
-            type="submit"
-            leftIcon={<IconDeviceFloppy size={16} />}
-          >
-            Save
-          </Button>
+          <Menu transition="pop-top-right" position="top-end" width={220} withinPortal>
+            <Menu.Target>
+              <Button
+                disabled={!activePath}
+                variant="outline"
+                leftIcon={<IconDeviceFloppy size={16} stroke={1.5} />}
+                rightIcon={<IconChevronDown size={18} stroke={1.5} />}
+                sx={{ height: 30 }}
+                pr={12}
+              >
+                Save
+              </Button>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item
+                sx={{ height: 30 }}
+                onClick={() => onSave()}
+                type="submit"
+                icon={<IconDeviceFloppy size={16} color={theme.colors.green[6]} stroke={1.5} />}
+                rightSection={
+                  <Text size="xs" transform="uppercase" weight={700} color="dimmed">
+                    {ctrlText} + S
+                  </Text>
+                }
+              >
+                Save
+              </Menu.Item>
+              <Menu.Item
+                onClick={() => onSave(true)}
+                sx={{ height: 30 }}
+                icon={<IconDeviceFloppy size={16} color={theme.colors.blue[6]} stroke={1.5} />}
+                rightSection={
+                  <Text size="xs" transform="uppercase" weight={700} color="dimmed">
+                    {ctrlText} + Shift + S
+                  </Text>
+                }
+              >
+                Save As
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
         </Group>
       </Container>
     </HeaderWrapper>

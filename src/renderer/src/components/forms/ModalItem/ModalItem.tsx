@@ -29,7 +29,7 @@ export default function ItemModal({ opened, toggleModal }: IModalProps) {
   return (
     <Modal title="Add Item Text" opened={opened} centered onClose={toggleModal}>
       <Divider mb="sm" />
-      <Text mb="xs">Menambahkan translation text untuk segment</Text>
+      <Text mb="xs">Add translation text for namespace :</Text>
       <Code>{selected}</Code>
       <Divider my="sm" />
       <TextInput
@@ -41,7 +41,7 @@ export default function ItemModal({ opened, toggleModal }: IModalProps) {
       />
       <Group mt="xl">
         <Button variant="outline" onClick={onSave}>
-          Buat Item
+          Create Item
         </Button>
       </Group>
     </Modal>
