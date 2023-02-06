@@ -58,6 +58,10 @@ export default function EditorModule() {
     setActiveData(selected);
   }, [selected]);
 
+  useEffect(() => {
+    setActiveData(selected);
+  }, [values]);
+
   return (
     <>
       <Grid mih="85vh">
