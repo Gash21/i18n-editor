@@ -89,8 +89,13 @@ export default function EditorProvider({
   };
 
   useEffect(() => {
-    setValues(unflattenObject(flattenValues));
+    const unflattenObj = unflattenObject(flattenValues);
+    setValues(unflattenObj);
   }, [flattenValues]);
+
+  // useEffect(() => {
+  //   console.log(values);
+  // }, [values]);
 
   const save = async (data: Record<string, any> | undefined) => {
     // await window.electron.ipcRenderer.invoke('save-file', { id: data.id, en: data.en })
@@ -101,15 +106,19 @@ export default function EditorProvider({
   };
 
   const open = async () => {
-    const path = await dialog.open({ directory: true });
+    const path = await dialog.open({ directory: true, multiple: false });
 
     if (path && !Array.isArray(path)) {
       const res = await openFolder(path);
       if (res) {
+        const flatten = flattenObject(res.values);
+        const unflatten = unflattenObject(flatten);
+        console.log({ flatten, unflatten });
         setFormValues({ id: res.id, en: res.en });
-        setValues(res.values);
         setFlattenValues(flattenObject(res.values));
+        setValues(res.values);
         setActivePath(res.path);
+        setSelected("");
       }
     }
   };

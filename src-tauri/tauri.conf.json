@@ -8,14 +8,15 @@
   },
   "package": {
     "productName": "i18n-editor",
-    "version": "0.0.0"
+    "version": "0.0.1"
   },
   "tauri": {
     "allowlist": {
       "all": false,
       "shell": {
         "all": false,
-        "open": true
+        "open": true,
+        "sidecar": true
       },
       "path": {
         "all": true
