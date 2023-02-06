@@ -1,0 +1,14 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <defs>
+    <style>.cls-1{fill:none;stroke:#2f3241;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}.cls-2{fill:#2f3241;}.cls-3{font-size:6.42px;fill:#ccc;font-family:Gotham-BoldItalic,
+      Gotham;font-weight:700;font-style:italic;}</style>
+  </defs>
+  <title>Artboard 1</title>
+  <path class="cls-1" d="M7.27,4.67h4.66" />
+  <path class="cls-1" d="M10.6,3.33V4.67C10.6,7.61,9.11,10,7.27,10" />
+  <path class="cls-1" d="M7.93,7.33c0,1.43,2,2.61,4.47,2.67" />
+  <path class="cls-1" d="M12.6,14.67l2.67-6,2.66,6" />
+  <rect class="cls-2" y="16.84" width="24" height="7.16" />
+  <path class="cls-1" d="M17.33,13.33H13.2" />
+  <text class="cls-3" transform="translate(3.98 22.54)">Tools</text>
+</svg>
