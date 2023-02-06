@@ -33,7 +33,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.gash21.i18n-editor",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -60,10 +60,12 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "height": 670,
+        "minHeight": 670,
         "resizable": true,
         "title": "i18n-editor",
-        "width": 800
+        "minWidth": 900,
+        "width": 900
       }
     ]
   }

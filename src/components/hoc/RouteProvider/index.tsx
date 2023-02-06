@@ -1,1 +1,1 @@
-export { default } from "./RouteProvider";
+export { default } from './RouteProvider'

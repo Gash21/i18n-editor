@@ -1,6 +1,7 @@
 import { flattenObject, unflattenObject } from "@renderer/utils/object";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { EditorContext } from "./useEditor";
+import { noop } from "@mantine/utils";
 
 type IEditorProvProps = {
   defaultValues: {};
@@ -33,29 +34,36 @@ export default function EditorProvider({
     setFlattenValues((fV: {}) => ({ ...fV, [key]: value }));
   };
 
-  const handleKeyPress = useCallback(async (event: KeyboardEvent) => {
-    const { keyCode, metaKey, ctrlKey, altKey } = event;
-    switch (keyCode) {
-      case 79:
-        if (metaKey || ctrlKey) {
-          await open();
-        }
-        break;
-      case 83:
-        if (altKey) {
-          console.log("create segment");
-        }
-        if (metaKey || ctrlKey) {
-          await save();
-        }
-        break;
-      case 73:
-        if (altKey) {
-          console.log("create item");
-        }
-        break;
-    }
-  }, []);
+  const handleKeyPress = useCallback(
+    async (event: KeyboardEvent) => {
+      const { keyCode, metaKey, ctrlKey, altKey, shiftKey } = event;
+      switch (keyCode) {
+        case 79:
+          if (metaKey || ctrlKey) {
+            await open();
+          }
+          break;
+        case 83:
+          if (altKey) {
+            noop();
+          }
+          if (metaKey || ctrlKey) {
+            if (shiftKey) {
+              await saveAs(formValues);
+            } else {
+              await save(formValues);
+            }
+          }
+          break;
+        case 73:
+          if (altKey) {
+            noop();
+          }
+          break;
+      }
+    },
+    [values, formValues]
+  );
 
   useEffect(() => {
     document.addEventListener("keydown", handleKeyPress);
@@ -65,26 +73,45 @@ export default function EditorProvider({
     };
   }, [handleKeyPress]);
 
-  const remove = (key: string) => {
-    const newValues = { ...flattenValues };
-    delete newValues[key];
-    setFlattenValues(newValues);
+  const remove = (key: string | undefined) => {
+    if (key) {
+      const newValues = { ...flattenValues };
+      Object.keys(newValues).forEach((k) => {
+        if (k.indexOf(key) > -1) {
+          delete newValues[k];
+        }
+      });
+      setFlattenValues(newValues);
+      setSelected("");
+    }
   };
 
   useEffect(() => {
     setValues(unflattenObject(flattenValues));
   }, [flattenValues]);
 
-  const save = async () => {
-    // await window.electron.ipcRenderer.invoke('save-file', { id: data.id, en: data.en })
+  const save = async (data: Record<string, any> | undefined) => {
+    console.log(data);
+    // await window.electron.ipcRenderer.invoke("save-file", {
+    //   id: data.id,
+    //   en: data.en,
+    // });
+  };
+
+  const saveAs = async (data: Record<string, any> | undefined) => {
+    console.log(data);
+    // await window.electron.ipcRenderer.invoke("save-as-file", {
+    //   id: data.id,
+    //   en: data.en,
+    // });
   };
 
   const open = async () => {
     // const res = await window.electron.ipcRenderer.invoke('open-file')
-    // setFormValues({ id: res.id, en: res.en });
-    // setValues(res.values);
-    // setFlattenValues(flattenObject(res.values));
-    // setActivePath(res.path);
+    // setFormValues({ id: res.id, en: res.en })
+    // setValues(res.values)
+    // setFlattenValues(flattenObject(res.values))
+    // setActivePath(res.path)
   };
 
   const contextValue = useMemo(
@@ -102,6 +129,7 @@ export default function EditorProvider({
       setSelected,
       setFormValues,
       save,
+      saveAs,
       open,
     }),
     [values, flattenValues, activePath, activeEditor, selected, formValues]

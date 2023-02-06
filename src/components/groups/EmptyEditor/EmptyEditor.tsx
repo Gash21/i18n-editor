@@ -62,7 +62,7 @@ export default function EmptyEditor() {
     <Flex direction="column" className={classes.container}>
       {items.map((item) => {
         return (
-          <UnstyledButton className={classes.item} onClick={item.action}>
+          <UnstyledButton key={item.title} className={classes.item} onClick={item.action}>
             <div className={classes.icon}>{item.icon}</div>
             <div className={classes.description}>
               <Text fw={700} size={16} mt={4}>
