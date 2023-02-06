@@ -92,7 +92,7 @@ export default function EditorProvider({
     setValues(unflattenObject(flattenValues));
   }, [flattenValues]);
 
-  const save = async (data) => {
+  const save = async (data: Record<string, any> | undefined) => {
     console.log(data);
     // await window.electron.ipcRenderer.invoke("save-file", {
     //   id: data.id,
@@ -100,7 +100,7 @@ export default function EditorProvider({
     // });
   };
 
-  const saveAs = async (data) => {
+  const saveAs = async (data: Record<string, any> | undefined) => {
     console.log(data);
     // await window.electron.ipcRenderer.invoke("save-as-file", {
     //   id: data.id,
