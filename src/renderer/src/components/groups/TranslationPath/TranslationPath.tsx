@@ -1,8 +1,15 @@
 import { createStyles, NavLink } from '@mantine/core'
 import { ReactNode } from 'react'
 
-export default function Translation({ data, parent, onClick, selected }) {
-  const populateData = (translation) => {
+type ITranslationProps = {
+  data: Record<string, any> | undefined
+  parent: string
+  onClick: (id: string) => void
+  selected?: string
+}
+
+export default function Translation({ data, parent, onClick, selected }: ITranslationProps) {
+  const populateData = (translation: Record<string, any>) => {
     const newParent = parent ? `${parent}.` : ''
     const HTML: ReactNode[] = []
     for (const x in translation) {
@@ -23,7 +30,7 @@ export default function Translation({ data, parent, onClick, selected }) {
     return HTML
   }
 
-  return <div>{populateData(data).map((el) => el)}</div>
+  return <div>{data && populateData(data).map((el) => el)}</div>
 }
 
 const AccordionStyles = createStyles(() => {
@@ -34,7 +41,15 @@ const AccordionStyles = createStyles(() => {
   }
 })
 
-const Accordion = ({ data, label, id, onClick, selected }) => {
+type IAccordionProps = {
+  data: Record<string, any> | undefined
+  label?: string
+  onClick: (id: string) => void
+  id: string
+  selected?: string
+}
+
+const Accordion = ({ data, label, id, onClick, selected }: IAccordionProps) => {
   const { classes } = AccordionStyles()
   if (!data) {
     return <span></span>

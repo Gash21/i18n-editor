@@ -5,7 +5,7 @@ type IEditorContext = {
   values: Record<string, any>
   flattenValues: Record<string, any>
   activePath?: string
-  activeEditor: {}
+  activeEditor: Record<string, any>
   selected?: string
   formValues: {}
   add: (key: string, value: Record<string, any> | string) => void
@@ -14,7 +14,7 @@ type IEditorContext = {
   setActiveEditor: (values: {}) => void
   setSelected: (key: string) => void
   setFormValues: (data: {}) => void
-  save: (data) => Promise<void>
+  save: (data: {} | undefined) => Promise<void>
   open: () => Promise<void>
 }
 

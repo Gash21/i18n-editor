@@ -3,7 +3,12 @@ import { useFormContext } from 'react-hook-form'
 import { useEditor } from '@renderer/contexts/EditorContext'
 import { useCallback } from 'react'
 
-export default function ItemModal({ opened, toggleModal }) {
+type IModalProps = {
+  opened: boolean
+  toggleModal: () => void
+}
+
+export default function ItemModal({ opened, toggleModal }: IModalProps) {
   const { watch, setValue } = useFormContext()
   const { selected, add } = useEditor()
 

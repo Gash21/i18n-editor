@@ -59,7 +59,12 @@ const useStyles = createStyles((theme) => ({
   }
 }))
 
-export default function Header({ openNamespace, openItem }) {
+type IHeaderProps = {
+  openNamespace: () => void
+  openItem: () => void
+}
+
+export default function Header({ openNamespace, openItem }: IHeaderProps) {
   const theme = useMantineTheme()
   const { selected, activePath } = useEditor()
   const { classes } = useStyles()

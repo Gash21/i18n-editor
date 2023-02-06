@@ -26,15 +26,18 @@ export default function EditorModule() {
     setValue('newItem', '')
   }, [flattenValues])
 
-  const setActiveData = (id) => {
-    const newData = Object.keys(flattenValues).reduce((res, key) => {
-      if (key.indexOf(id) > -1) {
-        if (typeof flattenValues[key] === 'string') {
-          res[key] = flattenValues[key]
+  const setActiveData = (id: string | undefined) => {
+    const newData = Object.keys(flattenValues).reduce(
+      (res: Record<string, any>, key: string | undefined) => {
+        if (key && id && key.indexOf(id) > -1) {
+          if (typeof flattenValues[key] === 'string') {
+            res[key] = flattenValues[key]
+          }
         }
-      }
-      return res
-    }, {})
+        return res
+      },
+      {}
+    )
     setActiveEditor(newData)
   }
 

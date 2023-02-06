@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: i18n-tools
+productName: i18n-editor
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ asarUnpack:
   - resources/*
 afterSign: build/notarize.js
 win:
-  executableName: i18n Tools
+  executableName: i18n Editor
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

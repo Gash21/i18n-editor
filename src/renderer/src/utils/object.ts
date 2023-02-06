@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * @param objects Object                 The object to flatten
  * @param prefix String (Optional)  The prefix to add before each key, also used for recursion

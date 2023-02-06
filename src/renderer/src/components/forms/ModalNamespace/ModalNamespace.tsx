@@ -2,7 +2,12 @@ import { Button, Divider, Group, Modal, TextInput } from '@mantine/core'
 import { useFormContext } from 'react-hook-form'
 import { useEditor } from '@renderer/contexts/EditorContext'
 
-export default function NamespaceModal({ opened, toggleModal }) {
+type IModalProps = {
+  opened: boolean
+  toggleModal: () => void
+}
+
+export default function NamespaceModal({ opened, toggleModal }: IModalProps) {
   const { watch, setValue } = useFormContext()
   const { add } = useEditor()
 

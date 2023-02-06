@@ -18,7 +18,10 @@ export default function EditorProvider({
   defaultActiveEditor = {}
 }: IEditorProvProps) {
   const [values, setValues] = useState<{}>(defaultValues)
-  const [formValues, setFormValues] = useState<{}>({ id: defaultValues, en: defaultValues })
+  const [formValues, setFormValues] = useState<{}>({
+    id: defaultValues,
+    en: defaultValues
+  })
   const [activePath, setActivePath] = useState(defaultActivePath)
   const [selected, setSelected] = useState(defaultSelected)
   const [activeEditor, setActiveEditor] = useState(defaultActiveEditor)
@@ -28,7 +31,7 @@ export default function EditorProvider({
     setFlattenValues((fV: {}) => ({ ...fV, [key]: value }))
   }
 
-  const handleKeyPress = useCallback(async (event) => {
+  const handleKeyPress = useCallback(async (event: KeyboardEvent) => {
     const { keyCode, metaKey, ctrlKey, altKey } = event
     switch (keyCode) {
       case 79:

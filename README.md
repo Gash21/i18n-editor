@@ -1,4 +1,4 @@
-# i18n-tools
+# i18n-editor
 
 An Electron application with React and TypeScript
 
