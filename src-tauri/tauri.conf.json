@@ -16,6 +16,30 @@
       "shell": {
         "all": false,
         "open": true
+      },
+      "path": {
+        "all": true
+      },
+      "fs": {
+        "all": false,
+        "copyFile": false,
+        "createDir": false,
+        "exists": true,
+        "readDir": true,
+        "removeDir": false,
+        "removeFile": true,
+        "renameFile": true,
+        "scope": ["**"],
+        "readFile": true,
+        "writeFile": true
+      },
+      "dialog": {
+        "all": false,
+        "ask": false,
+        "confirm": false,
+        "message": false,
+        "open": true,
+        "save": true
       }
     },
     "bundle": {
