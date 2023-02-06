@@ -4,7 +4,7 @@
  * @param prefix String (Optional)  The prefix to add before each key, also used for recursion
  **/
 export function flattenObject(objects: any, prefix: any = false, result: any = null) {
-  result = result || {}
+  result = result || {};
 
   // Preserve empty objects and arrays, they are lost otherwise
   if (
@@ -13,11 +13,11 @@ export function flattenObject(objects: any, prefix: any = false, result: any = n
     objects !== null &&
     Object.keys(objects).length === 0
   ) {
-    result[prefix] = Array.isArray(objects) ? [] : {}
-    return result
+    result[prefix] = Array.isArray(objects) ? [] : {};
+    return result;
   }
 
-  prefix = prefix ? prefix + '.' : ''
+  prefix = prefix ? prefix + '.' : '';
 
   for (const i in objects) {
     if (Object.prototype.hasOwnProperty.call(objects, i)) {
@@ -29,13 +29,13 @@ export function flattenObject(objects: any, prefix: any = false, result: any = n
         objects[i] !== null
       ) {
         // Recursion on deeper objects
-        flattenObject(objects[i], prefix + i, result)
+        flattenObject(objects[i], prefix + i, result);
       } else {
-        result[prefix + i] = objects[i]
+        result[prefix + i] = objects[i];
       }
     }
   }
-  return result
+  return result;
 }
 
 /**
@@ -44,17 +44,17 @@ export function flattenObject(objects: any, prefix: any = false, result: any = n
  * @param objects Object     The object to unflatten
  */
 export function unflattenObject(objects) {
-  const result = {}
+  const result = {};
   for (const i in objects) {
     if (Object.prototype.hasOwnProperty.call(objects, i)) {
-      const keys = i.match(/(?:^\.+)?(?:\.{2,}|[^.])+(?:\.+$)?/g) // Just a complicated regex to only match a single dot in the middle of the string
+      const keys = i.match(/(?:^\.+)?(?:\.{2,}|[^.])+(?:\.+$)?/g); // Just a complicated regex to only match a single dot in the middle of the string
       keys?.reduce((r, e, j) => {
         return (
           r[e] ||
           (r[e] = isNaN(Number(keys[j + 1])) ? (keys.length - 1 === j ? objects[i] : {}) : [])
-        )
-      }, result)
+        );
+      }, result);
     }
   }
-  return result
+  return result;
 }

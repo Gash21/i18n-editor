@@ -60,6 +60,7 @@ export default function EditorModule() {
 
   useEffect(() => {
     setActiveData(selected);
+    console.log(values);
   }, [values]);
 
   return (
