@@ -29,7 +29,6 @@
     "@electron-toolkit/tsconfig": "^1.0.1",
     "@electron/notarize": "^1.2.3",
     "@emotion/react": "^11.10.5",
-    "@logee-fe/i18n": "^0.0.7",
     "@mantine/core": "^5.10.2",
     "@mantine/hooks": "^5.10.2",
     "@tabler/icons": "^2.1.2",
