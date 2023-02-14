@@ -1,8 +1,12 @@
 {
   "name": "i18n-editor",
-  "private": true,
-  "version": "0.0.0",
+  "version": "0.0.2-alpha",
+  "description": "An i18n Tools application with React and TypeScript",
+  "author": "Gash21 <galiharghubi@gmail.com> (https://github.com/Gash21)",
+  "homepage": "https://github.com/Gash21/i18n-editor#readme",
+  "private": false,
   "type": "module",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

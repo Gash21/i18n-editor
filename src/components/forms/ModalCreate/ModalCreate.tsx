@@ -46,7 +46,7 @@ export default function ModalCreate({ opened, toggleModal }: IModalProps) {
 
   const onCreate = async () => {
     const isConfirming = await dialog.confirm(
-      `Are you sure to create new project?\n Any existing json will be overwrited
+      `Are you sure to create new project?\n Any existing json file will be overwriten
       \n\nIf you already received file from developer, please open your project instead`,
       { title: "Create new project", type: "warning" }
     );
