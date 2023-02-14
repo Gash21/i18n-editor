@@ -10,6 +10,9 @@ if ! command -v node &> /dev/null; then
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
   # This command installs nvm. You might need to restart your terminal after this.
   nvm install 18
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 fi
 
 if ! command -v yarn &> /dev/null; then
@@ -21,5 +24,3 @@ echo "Installing dependencies with yarn..."
 yarn install
 
 yarn tauri build
-
-yarn tauri run
