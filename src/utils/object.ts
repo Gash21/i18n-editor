@@ -83,6 +83,5 @@ export function unflattenObject(obj: any): any {
     }
     ref[parts[len - 1]] = obj[key];
   }
-  console.log(JSON.stringify(result, null, 2));
   return result;
 }

@@ -1,68 +1,80 @@
-import { createStyles, Flex, Text, UnstyledButton } from '@mantine/core'
-import { useEditor } from '@renderer/contexts/EditorContext'
-import { IconFolder, IconFolderPlus } from '@tabler/icons-react'
+import { createStyles, Flex, Modal, Text, UnstyledButton } from "@mantine/core";
+import ModalCreate from "@renderer/components/forms/ModalCreate";
+import { useEditor } from "@renderer/contexts/EditorContext";
+import { IconFolder, IconFolderPlus } from "@tabler/icons-react";
+import { useState } from "react";
 
 const useStyles = createStyles((theme) => ({
   item: {
-    display: 'flex',
-    flexDirection: 'row',
-    textAlign: 'center',
+    display: "flex",
+    flexDirection: "row",
+    textAlign: "center",
     borderRadius: theme.radius.md,
     height: 90,
     margin: 24,
-    padding: '1rem',
-    width: '34rem',
-    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-    transition: 'box-shadow 150ms ease, transform 100ms ease',
+    padding: "1rem",
+    width: "34rem",
+    backgroundColor:
+      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+    transition: "box-shadow 150ms ease, transform 100ms ease",
 
-    '&:hover': {
+    "&:hover": {
       boxShadow: `${theme.shadows.md} !important`,
-      transform: 'scale(1.01)'
-    }
+      transform: "scale(1.01)",
+    },
   },
   icon: {
-    display: 'flex',
-    alignItems: 'center',
-    alignSelf: 'center',
-    textAlign: 'center',
-    justifyContent: 'center',
-    margin: '1rem'
+    display: "flex",
+    alignItems: "center",
+    alignSelf: "center",
+    textAlign: "center",
+    justifyContent: "center",
+    margin: "1rem",
   },
   description: {
-    marginLeft: '1rem',
-    textAlign: 'left'
+    marginLeft: "1rem",
+    textAlign: "left",
   },
   container: {
-    alignContent: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
-    height: '100%'
-  }
-}))
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    height: "100%",
+  },
+}));
 export default function EmptyEditor() {
-  const { open } = useEditor()
+  const { open } = useEditor();
+  const [modalOpen, setModalOpen] = useState(false);
   const items = [
     {
-      title: 'Create New Project',
+      title: "Create New Project",
       description: `Let's start from scratch, please choose folder to save your file`,
       icon: <IconFolderPlus size={32} />,
-      action: () => open()
+      action: () => toggleModal(),
     },
     {
-      title: 'Open Project',
+      title: "Open Project",
       description: ` Open and edit your existing translation project `,
       icon: <IconFolder size={32} />,
-      action: () => open()
-    }
-  ]
+      action: () => open(),
+    },
+  ];
 
-  const { classes } = useStyles()
+  const toggleModal = () => {
+    setModalOpen((p) => !p);
+  };
+
+  const { classes } = useStyles();
   return (
     <Flex direction="column" className={classes.container}>
       {items.map((item) => {
         return (
-          <UnstyledButton key={item.title} className={classes.item} onClick={item.action}>
+          <UnstyledButton
+            key={item.title}
+            className={classes.item}
+            onClick={item.action}
+          >
             <div className={classes.icon}>{item.icon}</div>
             <div className={classes.description}>
               <Text fw={700} size={16} mt={4}>
@@ -73,8 +85,9 @@ export default function EmptyEditor() {
               </Text>
             </div>
           </UnstyledButton>
-        )
+        );
       })}
+      <ModalCreate opened={modalOpen} toggleModal={toggleModal} />
     </Flex>
-  )
+  );
 }

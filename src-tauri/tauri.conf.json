@@ -24,7 +24,7 @@
       "fs": {
         "all": false,
         "copyFile": false,
-        "createDir": false,
+        "createDir": true,
         "exists": true,
         "readDir": true,
         "removeDir": false,
@@ -35,10 +35,10 @@
         "writeFile": true
       },
       "dialog": {
-        "all": false,
-        "ask": false,
-        "confirm": false,
-        "message": false,
+        "all": true,
+        "ask": true,
+        "confirm": true,
+        "message": true,
         "open": true,
         "save": true
       }

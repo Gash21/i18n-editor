@@ -6,6 +6,7 @@ import {
   ActionIcon,
   Group,
   Text,
+  ScrollArea,
 } from "@mantine/core";
 import ModalConfirmDelete from "@renderer/components/forms/ModalConfirmDelete";
 import EmptyEditor from "@renderer/components/groups/EmptyEditor";
@@ -13,10 +14,12 @@ import InputGroup from "@renderer/components/groups/InputGroup";
 import TranslationPath from "@renderer/components/groups/TranslationPath";
 import { useEditor } from "@renderer/contexts/EditorContext";
 import { IconX } from "@tabler/icons-react";
-import { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { useStyles } from "./EditorModule.styles";
 
 export default function EditorModule() {
+  const { classes } = useStyles();
   const { setValue } = useFormContext();
   const {
     values,
@@ -71,13 +74,13 @@ export default function EditorModule() {
     setActiveData(selected);
   }, [selected]);
 
-  // useEffect(() => {
-  //   setActiveData(selected);
-  // }, [values]);
+  useEffect(() => {
+    setActiveData(selected);
+  }, [values]);
 
   return (
-    <>
-      <Grid mih="85vh">
+    <Fragment>
+      <Grid mih="85vh" className={classes.wrapper}>
         <Grid.Col
           sm={4}
           md={3}
@@ -113,7 +116,7 @@ export default function EditorModule() {
             />
           </Flex>
         </Grid.Col>
-        <Grid.Col sm={8} md={9}>
+        <Grid.Col sm={8} md={9} className={classes.wrapper}>
           {Object.keys(activeEditor).map((label) => (
             <InputGroup
               key={label}
@@ -132,10 +135,10 @@ export default function EditorModule() {
         opened={openModal}
         selected={selectedDelete}
         toggleModal={() => toggleModal(modalType, selectedDelete)}
-        onSubmit={() => remove(selected)}
+        onSubmit={() => remove(selectedDelete)}
         onCancel={() => toggleModal(modalType, selectedDelete)}
         type={modalType}
       />
-    </>
+    </Fragment>
   );
 }

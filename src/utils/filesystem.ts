@@ -1,8 +1,15 @@
-import { readDir, readTextFile, writeFile } from "@tauri-apps/api/fs";
+import { en, id } from "@logee-fe/i18n";
+import {
+  createDir,
+  readDir,
+  readTextFile,
+  writeFile,
+} from "@tauri-apps/api/fs";
 import { resolve } from "@tauri-apps/api/path";
 
 export const openFolder = async (path: string) => {
   const folders = await readDir(path, { recursive: true });
+  console.log(folders);
   if (!folders) {
     return;
   }
@@ -47,4 +54,31 @@ export const saveFolder = async (
     writeFile(`${path}/id-ID.json`, JSON.stringify(data.id, null, 2));
     writeFile(`${path}/en-EN.json`, JSON.stringify(data.en, null, 2));
   }
+};
+
+export const createProject = async (
+  path: string | null,
+  isDefault?: boolean,
+  resourceFolder?: boolean
+) => {
+  if (!path) {
+    return Promise.reject("No Folder Selected");
+  }
+  const contents = { id: {}, en: {} };
+  if (isDefault) {
+    contents.id = id;
+    contents.en = en;
+  }
+  let createPath = path;
+
+  if (resourceFolder) {
+    await readDir(`${path}/resources`).catch(async () => {
+      await createDir(`${path}/resources`);
+    });
+    createPath = `${path}/resources`;
+  }
+  writeFile(`${createPath}/id-ID.json`, JSON.stringify(contents.id, null, 2));
+  writeFile(`${createPath}/en-EN.json`, JSON.stringify(contents.en, null, 2));
+
+  return Promise.resolve(createPath);
 };

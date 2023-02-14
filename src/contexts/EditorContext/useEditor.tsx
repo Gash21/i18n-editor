@@ -1,30 +1,30 @@
-import { noop } from '@mantine/utils'
-import { createContext, useContext } from 'react'
+import { noop } from "@mantine/utils";
+import { createContext, useContext } from "react";
 
 type IEditorContext = {
-  values: Record<string, any>
-  flattenValues: Record<string, any>
-  activePath?: string
-  activeEditor: Record<string, any>
-  selected?: string
-  formValues: {}
-  add: (key: string, value: Record<string, any> | string) => void
-  remove: (key: string | undefined) => void
-  setActivePath: (key: string) => void
-  setActiveEditor: (values: {}) => void
-  setSelected: (key: string) => void
-  setFormValues: (data: {}) => void
-  save: (data: {} | undefined) => Promise<void>
-  saveAs: (data: {} | undefined) => Promise<void>
-  open: () => Promise<void>
-}
+  values: Record<string, any>;
+  flattenValues: Record<string, any>;
+  activePath?: string;
+  activeEditor: Record<string, any>;
+  selected?: string;
+  formValues: {};
+  add: (key: string, value: Record<string, any> | string) => void;
+  remove: (key: string | undefined) => void;
+  setActivePath: (key: string) => void;
+  setActiveEditor: (values: {}) => void;
+  setSelected: (key: string) => void;
+  setFormValues: (data: {}) => void;
+  save: (data: {} | undefined) => Promise<void>;
+  saveAs: (data: {} | undefined) => Promise<void>;
+  open: (path?: string) => Promise<void>;
+};
 
 export const EditorContext = createContext<IEditorContext>({
   values: {},
   flattenValues: {},
-  activePath: '',
+  activePath: "",
   activeEditor: {},
-  selected: '',
+  selected: "",
   formValues: {},
   add: noop,
   remove: noop,
@@ -34,9 +34,9 @@ export const EditorContext = createContext<IEditorContext>({
   setFormValues: noop,
   save: async () => {},
   saveAs: async () => {},
-  open: async () => {}
-})
+  open: async (path?: string) => {},
+});
 
 export default function useEditor() {
-  return useContext(EditorContext)
+  return useContext(EditorContext);
 }

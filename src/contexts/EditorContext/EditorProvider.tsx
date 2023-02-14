@@ -2,7 +2,7 @@ import { flattenObject, unflattenObject } from "@renderer/utils/object";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { EditorContext } from "./useEditor";
 import { noop } from "@mantine/utils";
-import { openFolder } from "@renderer/utils/filesystem";
+import { openFolder, saveFolder } from "@renderer/utils/filesystem";
 import { dialog } from "@tauri-apps/api";
 
 type IEditorProvProps = {
@@ -84,7 +84,6 @@ export default function EditorProvider({
         }
       });
       setFlattenValues(newValues);
-      setSelected("");
     }
   };
 
@@ -93,27 +92,32 @@ export default function EditorProvider({
     setValues(unflattenObj);
   }, [flattenValues]);
 
-  // useEffect(() => {
-  //   console.log(values);
-  // }, [values]);
-
   const save = async (data: Record<string, any> | undefined) => {
-    // await window.electron.ipcRenderer.invoke('save-file', { id: data.id, en: data.en })
+    await saveFolder(data, activePath);
+    alert("Saved successfully");
   };
 
   const saveAs = async (data: Record<string, any> | undefined) => {
     // await window.electron.ipcRenderer.invoke('save-as-file', { id: data.id, en: data.en })
   };
 
-  const open = async () => {
-    const path = await dialog.open({ directory: true, multiple: false });
+  const open = async (path?: string | undefined) => {
+    let newPath: string | null | string[] = "";
+    if (!path) {
+      newPath = await dialog.open({
+        directory: true,
+        multiple: false,
+        title: "Choose folder",
+      });
+    } else {
+      newPath = path;
+    }
 
-    if (path && !Array.isArray(path)) {
-      const res = await openFolder(path);
+    if (newPath && !Array.isArray(newPath)) {
+      const res = await openFolder(newPath);
       if (res) {
         const flatten = flattenObject(res.values);
         const unflatten = unflattenObject(flatten);
-        console.log({ flatten, unflatten });
         setFormValues({ id: res.id, en: res.en });
         setFlattenValues(flattenObject(res.values));
         setValues(res.values);
