@@ -20,6 +20,8 @@ if ! command -v yarn &> /dev/null; then
   npm install -g yarn
 fi
 
+mv .env.example .env
+
 echo "Installing dependencies with yarn..."
 yarn install
 
