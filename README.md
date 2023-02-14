@@ -32,3 +32,16 @@ $ yarn install
 ```bash
 $ yarn tauri dev
 ```
+
+### Production
+1. Download latest release here https://github.com/Gash21/i18n-editor/releases zip/tar.gz files
+2. After download finished, extract zip file
+3. Open directory using terminal
+```bash
+$ cd ~/Downloads/<folder release> # I assume you are using MacOS & downloaded on default Downloads folder
+$ bash install.sh # Wait for it to open the dmg file
+```
+
+If you encounter error
+`Error failed to bundle project: error running bundle_dmg.sh`
+Please run the command once again
