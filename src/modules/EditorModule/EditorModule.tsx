@@ -4,9 +4,6 @@ import {
   Code,
   Button,
   ActionIcon,
-  Group,
-  Text,
-  ScrollArea,
   Accordion,
   AccordionControlProps,
 } from "@mantine/core";
@@ -96,6 +93,7 @@ export default function EditorModule() {
           compact
           color="red"
           onClick={onClick}
+          mr="sm"
         >
           Delete Item
         </Button>
@@ -143,7 +141,7 @@ export default function EditorModule() {
         </Grid.Col>
         <Grid.Col sm={8} md={9} className={classes.wrapper}>
           <Flex direction={"column"} gap={'sm'}>
-            <Accordion variant={"separated"}>
+            <Accordion variant={"separated"} chevronPosition={"left"}>
               {Object.keys(activeEditor).map((label) => (
                   <Accordion.Item key={label} value={label}>
                     <AccordionControl onClick={() => toggleModal("item", label)}>{label}</AccordionControl>
