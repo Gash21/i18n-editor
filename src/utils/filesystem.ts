@@ -40,8 +40,8 @@ export const openFolder = async (path: string) => {
     return contents;
   }
 
-  await writeFile(`${path}/id-ID.json`, JSON.stringify({}, null, 2));
-  await writeFile(`${path}/en-EN.json`, JSON.stringify({}, null, 2));
+  await writeFile(`${path}/id.json`, JSON.stringify({}, null, 2));
+  await writeFile(`${path}/en.json`, JSON.stringify({}, null, 2));
 
   return { id: {}, en: {}, values: {}, path };
 };
@@ -54,8 +54,8 @@ export const saveFolder = async (
     await createDir(`${path}`);
   });
   if (data && data.id && data.en) {
-    writeFile(`${path}/id-ID.json`, JSON.stringify(data.id, null, 2));
-    writeFile(`${path}/en-EN.json`, JSON.stringify(data.en, null, 2));
+    writeFile(`${path}/id.json`, JSON.stringify(data.id, null, 2));
+    writeFile(`${path}/en.json`, JSON.stringify(data.en, null, 2));
   }
 };
 
@@ -80,8 +80,8 @@ export const createProject = async (
     });
     createPath = `${path}/resources`;
   }
-  writeFile(`${createPath}/id-ID.json`, JSON.stringify(contents.id, null, 2));
-  writeFile(`${createPath}/en-EN.json`, JSON.stringify(contents.en, null, 2));
+  writeFile(`${createPath}/id.json`, JSON.stringify(contents.id, null, 2));
+  writeFile(`${createPath}/en.json`, JSON.stringify(contents.en, null, 2));
 
   return Promise.resolve(createPath);
 };
