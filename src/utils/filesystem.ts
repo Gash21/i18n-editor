@@ -50,6 +50,9 @@ export const saveFolder = async (
   data: Record<string, any> | undefined,
   path: string
 ) => {
+  await readDir(`${path}`).catch(async () => {
+    await createDir(`${path}`);
+  });
   if (data && data.id && data.en) {
     writeFile(`${path}/id-ID.json`, JSON.stringify(data.id, null, 2));
     writeFile(`${path}/en-EN.json`, JSON.stringify(data.en, null, 2));

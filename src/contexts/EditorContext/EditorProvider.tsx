@@ -98,7 +98,10 @@ export default function EditorProvider({
   };
 
   const saveAs = async (data: Record<string, any> | undefined) => {
-    // await window.electron.ipcRenderer.invoke('save-as-file', { id: data.id, en: data.en })
+    const path = await dialog.save({ title: "Save As" });
+    if (path) {
+      saveFolder(data, path);
+    }
   };
 
   const open = async (path?: string | undefined) => {
