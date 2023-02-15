@@ -7,6 +7,8 @@ import {
   Group,
   Text,
   ScrollArea,
+  Accordion,
+  AccordionControlProps,
 } from "@mantine/core";
 import ModalConfirmDelete from "@renderer/components/forms/ModalConfirmDelete";
 import EmptyEditor from "@renderer/components/groups/EmptyEditor";
@@ -17,6 +19,10 @@ import { IconX } from "@tabler/icons-react";
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useStyles } from "./EditorModule.styles";
+
+type CustomAccordionProps = {
+  onClick: () => void;
+} & AccordionControlProps
 
 export default function EditorModule() {
   const { classes } = useStyles();
@@ -78,6 +84,25 @@ export default function EditorModule() {
     setActiveData(selected);
   }, [values]);
 
+  const AccordionControl = (props: CustomAccordionProps) => {
+    const { onClick, ...AccordionProps } = props
+    return (
+      <Flex justify="space-between" align="center" >
+        <Accordion.Control {...AccordionProps} />
+        <Button
+          leftIcon={<IconX size={12} />}
+          size="sm"
+          variant="outline"
+          compact
+          color="red"
+          onClick={onClick}
+        >
+          Delete Item
+        </Button>
+      </Flex>
+    )
+  }
+
   return (
     <Fragment>
       <Grid mih="85vh" className={classes.wrapper}>
@@ -117,18 +142,24 @@ export default function EditorModule() {
           </Flex>
         </Grid.Col>
         <Grid.Col sm={8} md={9} className={classes.wrapper}>
-          {Object.keys(activeEditor).map((label) => (
-            <InputGroup
-              key={label}
-              data={activeEditor[label]}
-              name={label}
-              label={label}
-              onDelete={() => toggleModal("item", label)}
-            />
-          ))}
-          {Object.keys(activeEditor).length === 0 && !activePath && (
-            <EmptyEditor />
-          )}
+          <Flex direction={"column"} gap={'sm'}>
+            <Accordion variant={"separated"}>
+              {Object.keys(activeEditor).map((label) => (
+                  <Accordion.Item key={label} value={label}>
+                    <AccordionControl onClick={() => toggleModal("item", label)}>{label}</AccordionControl>
+                    <Accordion.Panel>
+                      <InputGroup
+                        data={activeEditor[label]}
+                        name={label}
+                      />
+                    </Accordion.Panel>
+                  </Accordion.Item>
+              ))}
+            </Accordion>
+            {Object.keys(activeEditor).length === 0 && !activePath && (
+              <EmptyEditor />
+            )}
+          </Flex>
         </Grid.Col>
       </Grid>
       <ModalConfirmDelete
