@@ -78,12 +78,19 @@ export default function EditorProvider({
   const remove = (key: string | undefined) => {
     if (key) {
       const newValues = { ...flattenValues };
+      const formValuesFlat = flattenObject(formValues);
       Object.keys(newValues).forEach((k) => {
         if (k.indexOf(key) > -1) {
           delete newValues[k];
         }
       });
+      Object.keys(formValuesFlat).forEach((k) => {
+        if (k.indexOf(key) > -1) {
+          delete formValuesFlat[k];
+        }
+      });
       setFlattenValues(newValues);
+      setFormValues(unflattenObject(formValuesFlat));
     }
   };
 
@@ -119,8 +126,6 @@ export default function EditorProvider({
     if (newPath && !Array.isArray(newPath)) {
       const res = await openFolder(newPath);
       if (res) {
-        const flatten = flattenObject(res.values);
-        const unflatten = unflattenObject(flatten);
         setFormValues({ id: res.id, en: res.en });
         setFlattenValues(flattenObject(res.values));
         setValues(res.values);
