@@ -19,7 +19,7 @@ import { useStyles } from "./EditorModule.styles";
 
 type CustomAccordionProps = {
   onClick: () => void;
-} & AccordionControlProps
+} & AccordionControlProps;
 
 export default function EditorModule() {
   const { classes } = useStyles();
@@ -33,11 +33,15 @@ export default function EditorModule() {
     setActiveEditor,
     activePath,
     remove,
+    keywords,
   } = useEditor();
 
   const [openModal, setOpenModal] = useState(false);
   const [modalType, setModalType] = useState<"namespace" | "item" | undefined>(
     "namespace"
+  );
+  const [filteredEditor, setFilteredEditor] = useState<Record<string, string>>(
+    {}
   );
   const [selectedDelete, setSelectedDelete] = useState(selected);
 
@@ -81,10 +85,21 @@ export default function EditorModule() {
     setActiveData(selected);
   }, [values]);
 
+  useEffect(() => {
+    setFilteredEditor(
+      Object.keys(activeEditor).reduce((res: Record<string, any>, key) => {
+        if (key && key.indexOf(keywords) > -1) {
+          res[key] = activeEditor[key];
+        }
+        return res;
+      }, {})
+    );
+  }, [keywords]);
+
   const AccordionControl = (props: CustomAccordionProps) => {
-    const { onClick, ...AccordionProps } = props
+    const { onClick, ...AccordionProps } = props;
     return (
-      <Flex justify="space-between" align="center" >
+      <Flex justify="space-between" align="center">
         <Accordion.Control {...AccordionProps} />
         <Button
           leftIcon={<IconX size={12} />}
@@ -98,8 +113,8 @@ export default function EditorModule() {
           Delete Item
         </Button>
       </Flex>
-    )
-  }
+    );
+  };
 
   return (
     <Fragment>
@@ -140,19 +155,22 @@ export default function EditorModule() {
           </Flex>
         </Grid.Col>
         <Grid.Col sm={8} md={9} className={classes.wrapper}>
-          <Flex direction={"column"} gap={'sm'}>
+          <Flex direction={"column"} gap={"sm"}>
             <Accordion variant={"separated"} chevronPosition={"left"}>
-              {Object.keys(activeEditor).map((label) => (
+              {Object.keys(!!keywords ? filteredEditor : activeEditor).map(
+                (label) => (
                   <Accordion.Item key={label} value={label}>
-                    <AccordionControl onClick={() => toggleModal("item", label)}>{label}</AccordionControl>
+                    <AccordionControl
+                      onClick={() => toggleModal("item", label)}
+                    >
+                      {label}
+                    </AccordionControl>
                     <Accordion.Panel>
-                      <InputGroup
-                        data={activeEditor[label]}
-                        name={label}
-                      />
+                      <InputGroup data={activeEditor[label]} name={label} />
                     </Accordion.Panel>
                   </Accordion.Item>
-              ))}
+                )
+              )}
             </Accordion>
             {Object.keys(activeEditor).length === 0 && !activePath && (
               <EmptyEditor />

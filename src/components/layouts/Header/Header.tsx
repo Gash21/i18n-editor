@@ -6,6 +6,7 @@ import {
   Header as HeaderWrapper,
   Menu,
   Text,
+  TextInput,
   useMantineTheme,
 } from "@mantine/core";
 import { useEditor } from "@renderer/contexts/EditorContext";
@@ -18,6 +19,7 @@ import {
   IconPackage,
   IconPlus,
   IconSquareCheck,
+  IconSearch,
 } from "@tabler/icons-react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
@@ -76,8 +78,15 @@ type IHeaderProps = {
 export default function Header({ openNamespace, openItem }: IHeaderProps) {
   const theme = useMantineTheme();
   const { watch } = useFormContext();
-  const { selected, activePath, open, save, saveAs, setFormValues } =
-    useEditor();
+  const {
+    selected,
+    activePath,
+    open,
+    save,
+    saveAs,
+    setFormValues,
+    setKeywords,
+  } = useEditor();
   const { classes } = useStyles();
 
   useEffect(() => {
@@ -99,6 +108,11 @@ export default function Header({ openNamespace, openItem }: IHeaderProps) {
       save(watch());
     }
   };
+
+  const onSearch = (keywords: string) => {
+    setKeywords(keywords);
+  };
+
   return (
     <HeaderWrapper height={60} sx={{ borderBottom: 0 }} mb={120}>
       <Container className={classes.inner} fluid>
@@ -107,6 +121,14 @@ export default function Header({ openNamespace, openItem }: IHeaderProps) {
         </Group>
         <Group spacing={5} className={classes.links}></Group>
         <Group>
+          <TextInput
+            icon={<IconSearch size={18} stroke={1.5} />}
+            radius="sm"
+            size="sm"
+            placeholder="Search"
+            variant={"filled"}
+            onChange={(e) => onSearch(e.currentTarget.value)}
+          />
           <Menu
             transition="pop-top-right"
             position="top-end"
