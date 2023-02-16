@@ -5,11 +5,9 @@ import { useFormContext } from 'react-hook-form';
 type IInputGroup = {
   data: Record<string, any>;
   name: string;
-  label: string;
-  onDelete: () => void;
 };
 
-export default function InputGroup({ data, name, label, onDelete }: IInputGroup) {
+export default function InputGroup({ data, name}: IInputGroup) {
   const { register, setValue } = useFormContext();
   if (typeof data !== 'string') {
     return <span></span>;
@@ -20,21 +18,6 @@ export default function InputGroup({ data, name, label, onDelete }: IInputGroup)
       <TextInput
         icon="id"
         styles={{ label: { width: '100%' } }}
-        label={
-          <Flex w="100%" direction="row" justify="space-between" align="center">
-            <Text>{label}</Text>
-            <Button
-              leftIcon={<IconX size={12} />}
-              size="sm"
-              variant="outline"
-              compact
-              color="red"
-              onClick={onDelete}
-            >
-              Delete Item
-            </Button>
-          </Flex>
-        }
         labelProps={{ my: 'sm' }}
         mb="sm"
         rightSection={

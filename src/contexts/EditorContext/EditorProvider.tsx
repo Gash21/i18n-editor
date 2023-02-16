@@ -2,6 +2,7 @@ import { flattenObject, unflattenObject } from "@renderer/utils/object";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { EditorContext } from "./useEditor";
 import { noop } from "@mantine/utils";
+import { useDebouncedValue } from "@mantine/hooks";
 import { openFolder, saveFolder } from "@renderer/utils/filesystem";
 import { dialog } from "@tauri-apps/api";
 
@@ -10,6 +11,7 @@ type IEditorProvProps = {
   defaultActivePath?: string;
   defaultSelected?: string;
   defaultActiveEditor?: {};
+  defaultKeywords?: string;
   children: ReactNode;
 };
 
@@ -19,6 +21,7 @@ export default function EditorProvider({
   defaultActivePath = "",
   defaultSelected = "",
   defaultActiveEditor = {},
+  defaultKeywords = "",
 }: IEditorProvProps) {
   const [values, setValues] = useState<{}>(defaultValues);
   const [formValues, setFormValues] = useState<{}>({
@@ -31,6 +34,8 @@ export default function EditorProvider({
   const [flattenValues, setFlattenValues] = useState(
     flattenObject(defaultValues)
   );
+  const [keywords, setKeywords] = useState<string>(defaultKeywords);
+  const [debouncedKeywords] = useDebouncedValue(keywords, 500);
 
   const add = (key: string, value = {}) => {
     setFlattenValues((fV: {}) => ({ ...fV, [key]: value }));
@@ -143,17 +148,27 @@ export default function EditorProvider({
       activeEditor,
       selected,
       formValues,
+      keywords: debouncedKeywords,
       add,
       remove,
       setActivePath,
       setActiveEditor,
       setSelected,
       setFormValues,
+      setKeywords,
       save,
       saveAs,
       open,
     }),
-    [values, flattenValues, activePath, activeEditor, selected, formValues]
+    [
+      values,
+      flattenValues,
+      activePath,
+      activeEditor,
+      selected,
+      formValues,
+      debouncedKeywords,
+    ]
   );
 
   return (

@@ -8,12 +8,14 @@ type IEditorContext = {
   activeEditor: Record<string, any>;
   selected?: string;
   formValues: {};
+  keywords: string;
   add: (key: string, value: Record<string, any> | string) => void;
   remove: (key: string | undefined) => void;
   setActivePath: (key: string) => void;
   setActiveEditor: (values: {}) => void;
   setSelected: (key: string) => void;
   setFormValues: (data: {}) => void;
+  setKeywords: (data: string) => void;
   save: (data: {} | undefined) => Promise<void>;
   saveAs: (data: {} | undefined) => Promise<void>;
   open: (path?: string) => Promise<void>;
@@ -26,12 +28,14 @@ export const EditorContext = createContext<IEditorContext>({
   activeEditor: {},
   selected: "",
   formValues: {},
+  keywords: "",
   add: noop,
   remove: noop,
   setActivePath: noop,
   setActiveEditor: noop,
   setSelected: noop,
   setFormValues: noop,
+  setKeywords: noop,
   save: async () => {},
   saveAs: async () => {},
   open: async (path?: string) => {},
