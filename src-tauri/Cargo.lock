@@ -1028,7 +1028,7 @@ checksum = "21dec9db110f5f872ed9699c3ecf50cf16f423502706ba5c72462e28d3157573"
 
 [[package]]
 name = "i18n-editor"
-version = "0.0.2-alpha"
+version = "0.0.4"
 dependencies = [
  "serde",
  "serde_json",
