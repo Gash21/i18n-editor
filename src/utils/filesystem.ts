@@ -1,4 +1,4 @@
-import { en, id } from "@logee-fe/i18n";
+import { en, id } from "@renderer/locale";
 import {
   createDir,
   readDir,
@@ -6,10 +6,10 @@ import {
   writeFile,
 } from "@tauri-apps/api/fs";
 import { resolve } from "@tauri-apps/api/path";
+import { unflattenObject } from "./object";
 
 export const openFolder = async (path: string) => {
   const folders = await readDir(path, { recursive: true });
-  console.log(folders);
   if (!folders) {
     return;
   }
@@ -22,10 +22,10 @@ export const openFolder = async (path: string) => {
             const resolvedPath = await resolve(item.path);
             const file = await readTextFile(resolvedPath);
             if (item.name.indexOf("id") > -1) {
-              contents.id = JSON.parse(file);
+              contents.id = unflattenObject(JSON.parse(file));
             }
             if (item.name.indexOf("en") > -1) {
-              contents.en = JSON.parse(file);
+              contents.en = unflattenObject(JSON.parse(file));
             }
           }
         }
@@ -54,8 +54,8 @@ export const saveFolder = async (
     await createDir(`${path}`);
   });
   if (data && data.id && data.en) {
-    writeFile(`${path}/id.json`, JSON.stringify(data.id, null, 2));
-    writeFile(`${path}/en.json`, JSON.stringify(data.en, null, 2));
+    writeFile(`${path}/id.json`, data.id);
+    writeFile(`${path}/en.json`, data.en);
   }
 };
 

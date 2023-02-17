@@ -5,6 +5,7 @@ import { noop } from "@mantine/utils";
 import { useDebouncedValue } from "@mantine/hooks";
 import { openFolder, saveFolder } from "@renderer/utils/filesystem";
 import { dialog } from "@tauri-apps/api";
+import { useConfig } from "../ConfigContext";
 
 type IEditorProvProps = {
   defaultValues: {};
@@ -24,6 +25,7 @@ export default function EditorProvider({
   defaultKeywords = "",
 }: IEditorProvProps) {
   const [values, setValues] = useState<{}>(defaultValues);
+  const { exportConfig } = useConfig();
   const [formValues, setFormValues] = useState<{}>({
     id: defaultValues,
     en: defaultValues,
@@ -69,7 +71,7 @@ export default function EditorProvider({
           break;
       }
     },
-    [values, formValues]
+    [values, formValues, exportConfig]
   );
 
   useEffect(() => {
@@ -104,15 +106,39 @@ export default function EditorProvider({
     setValues(unflattenObj);
   }, [flattenValues]);
 
+  const prepareData = (data: Record<string, any> | undefined) => {
+    if (data) {
+      const newData = { ...data };
+
+      console.log(exportConfig.flatten);
+
+      if (exportConfig.flatten) {
+        newData.id = flattenObject(newData.id);
+        newData.en = flattenObject(newData.en);
+      }
+      if (exportConfig.minify) {
+        newData.id = JSON.stringify(newData.id);
+        newData.en = JSON.stringify(newData.en);
+      } else {
+        newData.id = JSON.stringify(newData.id, null, 2);
+        newData.en = JSON.stringify(newData.en, null, 2);
+      }
+      return newData;
+    }
+    return { id: {}, en: {} };
+  };
+
   const save = async (data: Record<string, any> | undefined) => {
-    await saveFolder(data, activePath);
+    const newData = prepareData(data);
+    await saveFolder(newData, activePath);
     alert("Saved successfully");
   };
 
   const saveAs = async (data: Record<string, any> | undefined) => {
     const path = await dialog.save({ title: "Save As" });
+    const newData = prepareData(data);
     if (path) {
-      saveFolder(data, path);
+      saveFolder(newData, path);
     }
   };
 

@@ -7,6 +7,7 @@ import ModalNamespace from "@renderer/components/forms/ModalNamespace";
 import ModalItem from "@renderer/components/forms/ModalItem";
 import { useCallback, useEffect, useState } from "react";
 import Footer from "@renderer/components/layouts/Footer";
+import ModalConfiguration from "@renderer/components/forms/ModalConfiguration";
 
 export default function EditorLayout() {
   return (
@@ -23,6 +24,11 @@ const FormLayout = () => {
   const { save, formValues } = useEditor();
   const [openNamespace, setOpenNamespace] = useState(false);
   const [openItem, setOpenItem] = useState(false);
+  const [openConfig, setOpenConfig] = useState(false);
+  const toggleConfig = useCallback(() => {
+    setOpenConfig((p) => !p);
+  }, [openConfig]);
+
   const toggleNamespace = useCallback(() => {
     setOpenNamespace((p) => !p);
   }, [openNamespace]);
@@ -40,7 +46,11 @@ const FormLayout = () => {
         <AppShell
           footer={<Footer />}
           header={
-            <Header openNamespace={toggleNamespace} openItem={toggleItem} />
+            <Header
+              openNamespace={toggleNamespace}
+              openItem={toggleItem}
+              openConfig={toggleConfig}
+            />
           }
         >
           <Outlet />
@@ -49,6 +59,7 @@ const FormLayout = () => {
             toggleModal={toggleNamespace}
           />
           <ModalItem opened={openItem} toggleModal={toggleItem} />
+          <ModalConfiguration opened={openConfig} toggleModal={toggleConfig} />
         </AppShell>
       </form>
     </FormProvider>

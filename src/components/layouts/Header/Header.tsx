@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Button,
   Container,
   createStyles,
@@ -9,6 +10,7 @@ import {
   TextInput,
   useMantineTheme,
 } from "@mantine/core";
+import { useConfig } from "@renderer/contexts/ConfigContext";
 import { useEditor } from "@renderer/contexts/EditorContext";
 import { checkOS } from "@renderer/utils/devices";
 import {
@@ -20,6 +22,7 @@ import {
   IconPlus,
   IconSquareCheck,
   IconSearch,
+  IconSettings,
 } from "@tabler/icons-react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
@@ -73,9 +76,14 @@ const useStyles = createStyles((theme) => ({
 type IHeaderProps = {
   openNamespace: () => void;
   openItem: () => void;
+  openConfig: () => void;
 };
 
-export default function Header({ openNamespace, openItem }: IHeaderProps) {
+export default function Header({
+  openNamespace,
+  openItem,
+  openConfig,
+}: IHeaderProps) {
   const theme = useMantineTheme();
   const { watch } = useFormContext();
   const {
@@ -275,6 +283,9 @@ export default function Header({ openNamespace, openItem }: IHeaderProps) {
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
+          <ActionIcon onClick={openConfig}>
+            <IconSettings />
+          </ActionIcon>
         </Group>
       </Container>
     </HeaderWrapper>
