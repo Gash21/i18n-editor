@@ -166,7 +166,14 @@ export default function EditorModule() {
                       {label}
                     </AccordionControl>
                     <Accordion.Panel>
-                      <InputGroup data={activeEditor[label]} name={label} />
+                      <InputGroup
+                        data={
+                          !!keywords
+                            ? filteredEditor[label]
+                            : activeEditor[label]
+                        }
+                        name={label}
+                      />
                     </Accordion.Panel>
                   </Accordion.Item>
                 )
